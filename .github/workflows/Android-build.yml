@@ -93,9 +93,7 @@ jobs:
       # --------------------------------------------------
       - name: Install NativePHP Android
         run: |
-          php artisan native:install android \
-            --force \
-            --no-tty
+          php artisan native:install android --force
 
       # --------------------------------------------------
       # 11. Build frontend
@@ -108,11 +106,8 @@ jobs:
       # 12. Build release APK
       # --------------------------------------------------
       - name: Build Android APK
-        run: |
-          php artisan native:run android \
-            --build=release \
-            --no-tty
-
+           run: |
+             php artisan native:run android --build=release
       # --------------------------------------------------
       # 13. Locate APK
       # --------------------------------------------------
