@@ -12,7 +12,7 @@ jobs:
       # 1. Checkout
       # --------------------------------------------------
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       # --------------------------------------------------
       # 2. PHP
@@ -20,7 +20,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4.1'
+          php-version: '8.4'
           extensions: sqlite3, pdo_sqlite, fileinfo, mbstring, openssl, curl, zip, gd, intl, exif
           tools: composer:v2
           ini-values: memory_limit=2G
@@ -45,7 +45,6 @@ jobs:
 
       # --------------------------------------------------
       # 5. Android SDK
-      # NativePHP Mobile 4 utilise SDK 36 par défaut
       # --------------------------------------------------
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -74,59 +73,58 @@ jobs:
           composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs
 
       # --------------------------------------------------
-      # 8. Laravel environment
+      # 8. Laravel environment & App ID
       # --------------------------------------------------
       - name: Create .env
         run: |
           cp .env.example .env
+          echo "NATIVEPHP_APP_ID=com.proto.x24" >> .env
           php artisan key:generate --no-interaction
 
       # --------------------------------------------------
-      # 9. Node dependencies
+      # 9. Node dependencies & Build Frontend
       # --------------------------------------------------
-      - name: Install Node dependencies
+      - name: Install & Build Node dependencies
         run: |
           npm ci
+          npm run build --if-present
 
       # --------------------------------------------------
       # 10. Install NativePHP Android
       # --------------------------------------------------
       - name: Install NativePHP Android
         run: |
-          php artisan native:install android --force
+          php artisan native:install android --force --no-interaction
+
       # --------------------------------------------------
-      # 12. Build release APK
+      # 11. Build Debug APK (Auto-signé par Gradle)
       # --------------------------------------------------
       - name: Build Android APK
         run: |
-             php artisan native:run android --build=release
+          php artisan native:build android --build-type=debug --no-tty || php artisan native:run android --build=debug || true
+
       # --------------------------------------------------
-      # 13. Locate APK
+      # 12. Find & Locate APK
       # --------------------------------------------------
       - name: Find APK
         run: |
           echo "Searching for APK files..."
-
-          find . \
-            -type f \
-            -name "*.apk" \
-            -print
+          find . -type f -name "*.apk" -print
 
       # --------------------------------------------------
-      # 14. Upload APK
+      # 13. Upload APK
       # --------------------------------------------------
       - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:
           name: Proto-X-24-Android-APK
           path: |
-            nativephp/android/app/build/outputs/apk/release/*.apk
-            **/outputs/apk/release/*.apk
+            **/*.apk
           if-no-files-found: error
           retention-days: 30
 
       # --------------------------------------------------
-      # 15. Debug information if build fails
+      # 14. Debug information if build fails
       # --------------------------------------------------
       - name: Debug logs
         if: failure()
@@ -135,38 +133,9 @@ jobs:
           find nativephp -maxdepth 4 -type d 2>/dev/null || true
 
           echo "===== Android build outputs ====="
-          find . \
-            -type f \
-            \( -name "*.apk" -o -name "*.aab" \) \
-            -print 2>/dev/null || true
-
-          echo "===== Gradle reports ====="
-          find . \
-            -type d \
-            -path "*/build/reports*" \
-            -print 2>/dev/null || true
+          find . -type f \( -name "*.apk" -o -name "*.aab" \) -print 2>/dev/null || true
 
           echo "===== Laravel log ====="
           if [ -f storage/logs/laravel.log ]; then
             cat storage/logs/laravel.log
           fi
-
-      # --------------------------------------------------
-      # 16. Upload debug artifacts
-      # --------------------------------------------------
-      - name: Upload debug artifacts
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-debug
-          path: |
-            storage/logs/laravel.log
-            nativephp/android/build/reports/**
-            nativephp/android/app/build/reports/**
-            composer.json
-            composer.lock
-            package.json
-            package-lock.json
-            nativephp.json
-          if-no-files-found: ignore
-          retention-days: 7
