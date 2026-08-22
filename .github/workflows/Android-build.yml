@@ -70,7 +70,7 @@ jobs:
       # --------------------------------------------------
       - name: Install PHP dependencies
         run: |
-          Remove-Item -Force composer.lock -ErrorAction SilentlyContinue
+          rm -f composer.lock
           composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs
 
       # --------------------------------------------------
