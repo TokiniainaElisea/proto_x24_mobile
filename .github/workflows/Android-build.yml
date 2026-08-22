@@ -1,0 +1,174 @@
+name: Build Android
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: sqlite3, pdo_sqlite, fileinfo, mbstring, openssl, curl, zip, gd, intl, exif
+          tools: composer:v2
+          ini-values: memory_limit=2G
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: |
+            platforms;android-33
+            build-tools;33.0.0
+            ndk;25.1.8937393
+            cmake;3.22.1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PHP dependencies
+        run: |
+          composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Create .env file
+        run: |
+          cp .env.example .env
+          php artisan key:generate --no-interaction
+          
+          # Configuration Android
+          echo "APP_ENV=production" >> .env
+          echo "APP_DEBUG=false" >> .env
+          echo "APP_URL=http://localhost" >> .env
+          echo "SESSION_DRIVER=file" >> .env
+          echo "LOG_CHANNEL=stack" >> .env
+
+      - name: Install Node dependencies
+        run: |
+          npm install --legacy-peer-deps
+
+      - name: Install NativePHP Mobile
+        run: |
+          # Installer le package mobile
+          composer require nativephp/mobile --no-interaction
+          composer require nativephp/mobile-camera --no-interaction
+          
+          # Publier les assets
+          php artisan vendor:publish --tag=nativephp-mobile --force
+          php artisan vendor:publish --tag=nativephp-mobile-camera --force
+
+      - name: Build frontend assets
+        run: |
+          npm run build || echo "Frontend build script not found, skipping..."
+
+      - name: Setup Android Keystore (Optional)
+        if: secrets.ANDROID_KEYSTORE != ''
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > keystore.jks
+
+      - name: Build NativePHP Android
+        run: |
+          # Nettoyer les builds précédents
+          if [ -d "native/mobile/android" ]; then
+            rm -rf native/mobile/android
+          fi
+          
+          # Build avec Gradle
+          php artisan native:mobile:build android --production
+
+      - name: Debug - List generated files
+        shell: bash
+        run: |
+          echo "========================================"
+          echo "=== SEARCHING FOR ANDROID BUILD ARTIFACTS ==="
+          echo "========================================"
+          echo ""
+          
+          # Recherche dans plusieurs dossiers possibles
+          paths=(
+            "native/mobile/android/app/build/outputs/apk"
+            "native/mobile/android/app/build/outputs/bundle"
+            "native/android/app/build/outputs/apk"
+            "native/android/app/build/outputs/bundle"
+            "native/build/android/app/build/outputs/apk"
+            "native/build/android/app/build/outputs/bundle"
+            "android/app/build/outputs/apk"
+            "android/app/build/outputs/bundle"
+          )
+          
+          found=false
+          for path in "${paths[@]}"; do
+            if [ -d "$path" ]; then
+              echo "✓ Found directory: $path"
+              find "$path" -type f -name "*.apk" -o -name "*.aab" | while read -r file; do
+                size=$(du -h "$file" | cut -f1)
+                echo "  📁 $file - $size"
+                found=true
+              done
+            fi
+          done
+          
+          if [ "$found" = false ]; then
+            echo "✗ No Android build directories found!"
+            echo "Current directory structure:"
+            find . -type d -name "native*" -o -name "android*" | head -20
+          fi
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Proto-X-24-Android-APK
+          path: |
+            native/mobile/android/app/build/outputs/apk/**/*.apk
+            native/android/app/build/outputs/apk/**/*.apk
+            android/app/build/outputs/apk/**/*.apk
+            **/outputs/apk/**/*.apk
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload Android App Bundle (AAB)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Proto-X-24-Android-AAB
+          path: |
+            native/mobile/android/app/build/outputs/bundle/**/*.aab
+            native/android/app/build/outputs/bundle/**/*.aab
+            android/app/build/outputs/bundle/**/*.aab
+            **/outputs/bundle/**/*.aab
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload debug logs (if build failed)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-logs
+          path: |
+            storage/logs/laravel.log
+            native/mobile/android/build/reports
+            native/android/build/reports
+            android/build/reports
+            **/build/reports/**/*
+            **/build/outputs/logs/**/*
+            composer.json
+            package.json
+            nativephp.json
+          retention-days: 7
