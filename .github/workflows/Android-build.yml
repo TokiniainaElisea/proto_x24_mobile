@@ -70,7 +70,7 @@ jobs:
       # --------------------------------------------------
       - name: Install PHP dependencies
         run: |
-          rm -f composer.lock
+          composer config platform-check false
           composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs
 
       # --------------------------------------------------
@@ -94,14 +94,6 @@ jobs:
       - name: Install NativePHP Android
         run: |
           php artisan native:install android --force
-
-      # --------------------------------------------------
-      # 11. Build frontend
-      # --------------------------------------------------
-      - name: Build frontend
-        run: |
-          npm run build -- --mode=android
-
       # --------------------------------------------------
       # 12. Build release APK
       # --------------------------------------------------
