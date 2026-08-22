@@ -96,12 +96,7 @@ jobs:
 
       - name: Debug - List generated files
         shell: bash
-        run: |
-          echo "========================================"
-          echo "=== SEARCHING FOR ANDROID BUILD ARTIFACTS ==="
-          echo "========================================"
-          echo ""
-          
+        run: |          
           # Recherche dans plusieurs dossiers possibles
           paths=(
             "native/mobile/android/app/build/outputs/apk"
