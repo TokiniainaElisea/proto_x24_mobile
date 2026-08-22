@@ -106,7 +106,7 @@ jobs:
       # 12. Build release APK
       # --------------------------------------------------
       - name: Build Android APK
-           run: |
+        run: |
              php artisan native:run android --build=release
       # --------------------------------------------------
       # 13. Locate APK
