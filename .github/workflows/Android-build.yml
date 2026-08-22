@@ -92,9 +92,27 @@ jobs:
       # --------------------------------------------------
       # 11. Build Debug APK (Auto-signé par Gradle)
       # --------------------------------------------------
-      - name: Build Android APK
+      # 10. Setup Android signing
+      - name: Setup Android signing
+        env:
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
         run: |
-          php artisan native:build android --build-type=debug --no-tty || php artisan native:run android --build=debug || true
+          echo "$ANDROID_KEYSTORE" | base64 --decode > "$GITHUB_WORKSPACE/proto-x-24.jks"
+          test -f "$GITHUB_WORKSPACE/proto-x-24.jks"
+          echo "Keystore created successfully."
+      # Build signed Android package
+      - name: Build Android package
+        env:
+          ANDROID_KEYSTORE_FILE: ${{ github.workspace }}/proto-x-24.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          mkdir -p build-output
+          php artisan native:package android \
+            --build-type=release \
+            --output=${{ github.workspace }}/build-output \
+            --no-tty
 
       # --------------------------------------------------
       # 12. Find & Locate APK
