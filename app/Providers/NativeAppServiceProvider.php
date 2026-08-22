@@ -13,7 +13,7 @@ class NativeAppServiceProvider implements ProvidesPhpIni
      */
     public function boot(): void
     {
-        Window::open()->title('Proto X-24')->maximized();
+        Window::open()->title('Proto X-24 mobile')->maximized();
     }
 
     /**

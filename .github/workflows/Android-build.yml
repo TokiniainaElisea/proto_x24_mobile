@@ -20,7 +20,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.4.1'
           extensions: sqlite3, pdo_sqlite, fileinfo, mbstring, openssl, curl, zip, gd, intl, exif
           tools: composer:v2
           ini-values: memory_limit=2G
@@ -70,10 +70,8 @@ jobs:
       # --------------------------------------------------
       - name: Install PHP dependencies
         run: |
-          composer install \
-            --no-interaction \
-            --prefer-dist \
-            --optimize-autoloader
+          Remove-Item -Force composer.lock -ErrorAction SilentlyContinue
+          composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs
 
       # --------------------------------------------------
       # 8. Laravel environment
@@ -81,21 +79,7 @@ jobs:
       - name: Create .env
         run: |
           cp .env.example .env
-
           php artisan key:generate --no-interaction
-
-          {
-            echo "APP_ENV=production"
-            echo "APP_DEBUG=false"
-            echo "APP_URL=http://localhost"
-            echo "SESSION_DRIVER=file"
-            echo "LOG_CHANNEL=stack"
-
-            # NativePHP Android SDK
-            echo "NATIVEPHP_ANDROID_COMPILE_SDK=36"
-            echo "NATIVEPHP_ANDROID_TARGET_SDK=36"
-            echo "NATIVEPHP_ANDROID_MIN_SDK=26"
-          } >> .env
 
       # --------------------------------------------------
       # 9. Node dependencies
