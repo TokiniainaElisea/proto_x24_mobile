@@ -92,15 +92,23 @@ jobs:
       # --------------------------------------------------
       # 11. Build Debug APK (Auto-signé par Gradle)
       # --------------------------------------------------
-      # 10. Setup Android signing
+# 10. Setup Android signing
       - name: Setup Android signing
         env:
           ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
         run: |
-          echo "$ANDROID_KEYSTORE" | base64 --decode > "$GITHUB_WORKSPACE/proto-x-24.jks"
-          test -f "$GITHUB_WORKSPACE/proto-x-24.jks"
-          echo "Keystore created successfully."
-      # Build signed Android package
+          # Decodage robuste qui nettoie les retours à la ligne
+          echo "$ANDROID_KEYSTORE" | tr -d '\r\n' | base64 --decode > "$GITHUB_WORKSPACE/proto-x-24.jks"
+
+          # Verification que le fichier existe et n'est pas vide
+          if [ ! -s "$GITHUB_WORKSPACE/proto-x-24.jks" ]; then
+            echo "Erreur: Le fichier Keystore est vide ou invalide !"
+            exit 1
+          fi
+
+          echo "Keystore généré avec succès ($(du -h "$GITHUB_WORKSPACE/proto-x-24.jks" | cut -f1))."
+
+      # 11. Build signed Android package
       - name: Build Android package
         env:
           ANDROID_KEYSTORE_FILE: ${{ github.workspace }}/proto-x-24.jks
@@ -109,6 +117,7 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           mkdir -p build-output
+          chmod +x nativephp/android/gradlew 2>/dev/null || true
           php artisan native:package android \
             --build-type=release \
             --output=${{ github.workspace }}/build-output \
