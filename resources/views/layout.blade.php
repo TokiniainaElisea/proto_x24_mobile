@@ -12,12 +12,18 @@
 </head>
 
 <body>
-    <script src="{{ asset('js/chart.js') }}"></script>
-    @stack('scripts')
+
+    <div class="app-safe-area">
+
         @include('navbar')
         @yield('content')
+
+    </div>
+
+    <script src="{{ asset('js/chart.js') }}"></script>
+    @stack('scripts')
     <script src="{{ asset('js/bootstrap.bundle.js') }}"></script>
-    
+
 </body>
 
 </html>

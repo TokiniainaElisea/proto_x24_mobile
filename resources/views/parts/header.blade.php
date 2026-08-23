@@ -5,7 +5,7 @@
             <div class="lh-1">
 
                 <div class="fw-bold text-white fs-5">
-                    Proto <span class="text-primary">x-24</span>
+                    Proto <span class="text-primary">x-24 mobile</span>
                 </div>
 
             </div>

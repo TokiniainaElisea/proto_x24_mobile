@@ -3,7 +3,7 @@
         <span class="navbar-brand text-decoration-none">
 
             <div class="fw-bold text-white fs-5">
-                Proto <span class="text-primary">x-24</span>
+                Proto <span class="text-primary">x-24 mobile</span>
             </div>
         </span>
         <button class="btn btn-dark d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar"
@@ -21,7 +21,7 @@
         <div>
 
             <div class="fw-bold fs-5 text-white">
-                Proto <span class="text-primary">x-24</span>
+                Proto <span class="text-primary">x-24 mobile</span>
             </div>
 
             <small class="text-secondary">
@@ -29,7 +29,7 @@
             </small>
 
         </div>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button type="button" class="btn text-white" data-bs-dismiss="offcanvas" aria-label="Close"> <i class="bi bi-x fs-3"> </i> </button>
     </div>
     <div class="offcanvas-body">
         <ul class="nav nav-pills flex-column gap-1">
@@ -139,7 +139,7 @@
             <li class="nav-item mt-3">
 
                 <small class="text-uppercase text-secondary fw-bold px-3">
-                    Relations
+                    Relation
                 </small>
 
             </li>
@@ -158,6 +158,13 @@
 
             </li>
 
+            <li class="nav-item mt-3">
+
+                <small class="text-uppercase text-secondary fw-bold px-3">
+                    Autre
+                </small>
+
+            </li>
 
             {{-- ================= PARAMÈTRES ================= --}}
             <li class="nav-item mt-1">

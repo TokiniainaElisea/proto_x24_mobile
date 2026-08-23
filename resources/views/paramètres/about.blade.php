@@ -21,7 +21,7 @@
                 </h2>
 
                 <small class="text-muted">
-                    Informations sur Proto X-24
+                    Informations sur Proto X-24 mobile
                 </small>
 
             </div>
@@ -46,7 +46,7 @@
                     </div>
 
                     <h1 class="fw-bold mb-1">
-                        Proto X-24
+                        Proto X-24 mobile
                     </h1>
 
                     <div class="text-muted mb-3">
@@ -68,7 +68,7 @@
                     </p>
 
                     <p class="text-muted mb-0">
-                        Proto X-24 permet de centraliser les produits, les stocks,
+                        Proto X-24 mobile permet de centraliser les produits, les stocks,
                         les clients et les ventes, tout en offrant une vision claire
                         de l'activité de l'entreprise.
                     </p>
@@ -311,7 +311,7 @@
                         </div>
 
                         <strong>
-                            Proto X-24
+                            Proto X-24 mobile
                         </strong>
 
                     </div>
@@ -335,7 +335,7 @@
                         </div>
 
                         <strong>
-                            Desktop
+                            Android
                         </strong>
 
                     </div>
@@ -395,7 +395,7 @@
 
             <i class="bi bi-boxes me-1"></i>
 
-            Proto X-24 · Gestion commerciale
+            Proto X-24 mobile · Gestion commerciale
 
         </div>
 

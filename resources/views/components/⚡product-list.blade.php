@@ -1,7 +1,7 @@
 <?php
 
 use Livewire\Component;
-use App\Models\Stock\Product;
+use App\Models\Product;
 
 new class extends Component {
     public string $search = '';
@@ -38,23 +38,33 @@ new class extends Component {
 
                     <div class="card-body py-3">
 
-                        <div class="row align-items-center">
+                        <div class="row align-items-center g-3">
 
-                            {{-- Informations produit --}}
-                            <div class="col-8">
+                            {{-- ================================================= --}}
+                            {{-- INFORMATIONS PRODUIT                              --}}
+                            {{-- ================================================= --}}
 
-                                <div class="d-flex align-items-center mb-2">
+                            <div class="col-12 col-md-9">
 
-                                    <div class="rounded bg-light d-flex align-items-center justify-content-center me-3"
+                                <div class="d-flex align-items-center">
+
+                                    {{-- Image --}}
+
+                                    <div class="rounded bg-light d-flex align-items-center justify-content-center flex-shrink-0 me-3"
                                         style="width: 45px; height: 45px;">
 
-                                        <img class="img-fluid" src="{{ $product->image_path ? asset($product->image_path) : asset('uploads/product/sans.png') }}" alt="">
+                                        <img class="img-fluid rounded"
+                                            src="{{ $product->image_path ? asset($product->image_path) : asset('uploads/product/sans.png') }}"
+                                            alt="{{ $product->name_product }}">
 
                                     </div>
 
-                                    <div>
 
-                                        <h6 class="fw-bold mb-0">
+                                    {{-- Nom + référence --}}
+
+                                    <div class="min-width-0">
+
+                                        <h6 class="fw-bold mb-0 text-truncate">
 
                                             {{ $product->name_product }}
 
@@ -71,10 +81,13 @@ new class extends Component {
                                 </div>
 
 
-                                <div class="d-flex align-items-center gap-3">
+                                {{-- Stock + Prix --}}
+
+                                <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
 
                                     {{-- Stock --}}
-                                    @if ($product->mouvement)
+
+                                    @if ($product->mouvement && $product->mouvement->sum('in_stock') > 0)
                                         <span class="badge bg-success-subtle text-success">
 
                                             <i class="bi bi-boxes me-1"></i>
@@ -95,6 +108,7 @@ new class extends Component {
 
 
                                     {{-- Prix --}}
+
                                     <span class="fw-bold text-success">
 
                                         {{ number_format($product->price, 0, ',', ' ') }} Ar
@@ -106,22 +120,31 @@ new class extends Component {
                             </div>
 
 
-                            {{-- Action --}}
-                            <div class="col-4 text-end">
+                            {{-- ================================================= --}}
+                            {{-- ACTION                                             --}}
+                            {{-- ================================================= --}}
 
-                                @if ($product->mouvement->sum('in_stock') > 0)
-                                    <button type="button" class="btn btn-outline-primary"
+                            <div class="col-12 col-md-3">
+
+                                @if ($product->mouvement && $product->mouvement->sum('in_stock') > 0)
+                                    <button type="button" class="btn btn-outline-primary w-100"
                                         wire:click="addProduct({{ $product }})">
 
                                         <i class="bi bi-cart-plus-fill me-1"></i>
-                                        Ajouter
+
+                                        <span class="d-none d-sm-inline">
+                                            Ajouter
+                                        </span>
 
                                     </button>
                                 @else
-                                    <button type="button" class="btn btn-outline-secondary" disabled>
+                                    <button type="button" class="btn btn-outline-secondary w-100" disabled>
 
                                         <i class="bi bi-cart-x me-1"></i>
-                                        Indisponible
+
+                                        <span class="d-none d-sm-inline">
+                                            Indisponible
+                                        </span>
 
                                     </button>
                                 @endif

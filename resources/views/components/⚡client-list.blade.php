@@ -88,21 +88,21 @@ new class extends Component {
 
                             <th class="ps-3">
                                 N° client
-                            </th>
+                            </th style="min-width:55px">
 
-                            <th>
+                            <th style="min-width:100px">
                                 Nom
                             </th>
 
-                            <th>
+                            <th style="min-width:120px">
                                 Prénom
                             </th>
 
-                            <th>
+                            <th style="min-width:90px">
                                 Téléphone
                             </th>
 
-                            <th>
+                            <th style="min-width:55px">
                                 Ville
                             </th>
 

@@ -2,12 +2,13 @@
 
 use App\Models\SaleDetail;
 use App\Models\Sales;
+use App\Models\Product;
 use App\Models\Numbering;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use App\Models\Stock\Mouvement;
+use App\Models\Mouvement;
 
 new class extends Component {
     //product list
@@ -321,7 +322,7 @@ new class extends Component {
 
                     <i class="bi bi-three-dots"></i>
 
-                    {{ $moreInfos ? 'Masquer' : 'Plus d’informations' }}
+                    {{ $moreInfos ? 'Masquer' : 'Plus' }}
 
                 </button>
 
@@ -423,7 +424,7 @@ new class extends Component {
                     <div class="d-flex justify-content-between align-items-center">
 
                         <span class="fw-semibold text-muted">
-                            Total de la commande
+                            Total :
                         </span>
 
                         <span class="fs-4 fw-bold text-success">

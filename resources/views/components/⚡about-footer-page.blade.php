@@ -1,12 +1,12 @@
 <?php
 
 use Livewire\Component;
-use Native\Desktop\Facades\Shell;
+use Native\Mobile\Facades\Browser;
 
 new class extends Component {
     public function openPortfolio()
     {
-        Shell::openExternal('https://elisea.vercel.app');
+        Browser::inApp('https://elisea.vercel.app');
     }
 };
 ?>
