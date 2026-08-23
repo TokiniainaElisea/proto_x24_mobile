@@ -5,11 +5,11 @@ use App\Http\Requests\ProductRequest;
 use App\Http\Requests\SearchProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Numbering;
-use App\Models\Stock\Category;
-use App\Models\Stock\Detail;
-use App\Models\Stock\Mouvement;
-use App\Models\Stock\Product;
-use App\Models\Stock\Provider;
+use App\Models\Category;
+use App\Models\Detail;
+use App\Models\Mouvement;
+use App\Models\Product;
+use App\Models\Provider;
 
 class ProductController extends Controller
 {

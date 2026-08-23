@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Sales;
-use App\Models\Stock\Product;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 
 class SaleDetail extends Model

@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SaleDetail;
 use App\Models\Sales;
-use App\Models\Stock\Category;
+use App\Models\Category;
 use Carbon\Carbon;
 
 class DashboardController extends Controller

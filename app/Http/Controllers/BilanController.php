@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BilanPeriodeRequest;
 use App\Models\SaleDetail;
 use App\Models\Sales;
-use App\Models\Stock\Category;
-use App\Models\Stock\Product;
+use App\Models\Category;
+use App\Models\Product;
 
 class BilanController extends Controller
 {

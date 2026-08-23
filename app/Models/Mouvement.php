@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Stock;
+namespace App\Models;
 
-use App\Models\Stock\Product;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 
 class Mouvement extends Model

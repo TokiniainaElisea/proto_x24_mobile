@@ -3,8 +3,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MouvementRequest;
 use App\Http\Requests\UpdateMouvementRequest;
-use App\Models\Stock\Mouvement;
-use App\Models\Stock\Product;
+use App\Models\Mouvement;
+use App\Models\Product;
 
 class MouvementController extends Controller
 {

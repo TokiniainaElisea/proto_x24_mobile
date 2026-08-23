@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\Stock;
+namespace App\Models;
 
 use App\Models\SaleDetail;
-use App\Models\Stock\Category;
-use App\Models\Stock\Detail;
-use App\Models\Stock\Mouvement;
-use App\Models\Stock\Provider;
+use App\Models\Category;
+use App\Models\Detail;
+use App\Models\Mouvement;
+use App\Models\Provider;
 use Illuminate\Database\Eloquent\Model;
 
 class product extends Model
