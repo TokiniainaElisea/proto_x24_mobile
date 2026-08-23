@@ -79,7 +79,7 @@ jobs:
         run: |
           cp .env.example .env
           echo "NATIVEPHP_APP_ID=com.proto.x24" >> .env
-          echo "NATIVEPHP_ANDROID_MIN_SDK=24"
+          echo "NATIVEPHP_ANDROID_MIN_SDK=26"
           php artisan key:generate --no-interaction
 
 
