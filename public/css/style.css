@@ -1,10 +1,13 @@
+
 body {
     margin: 0;
+    background-color: #212529;
 }
 
 .app-safe-area {
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
+    background-color: #212529;
 }
 
 .sidebar{
