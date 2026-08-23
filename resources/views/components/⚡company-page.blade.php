@@ -84,7 +84,7 @@ new class extends Component {
 <div>
 
     {{-- Informations principales --}}
-    <div class="card shadow-sm border-0 mb-4">
+    <div class="card shadow-sm border-0 my-2">
 
         <div class="card-header bg-dark text-white">
 

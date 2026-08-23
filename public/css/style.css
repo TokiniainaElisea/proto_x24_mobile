@@ -10,6 +10,15 @@ body {
     background-color: #212529;
 }
 
+.offcanvas {
+    top: env(safe-area-inset-top, 0px);
+    height: calc(
+        100% -
+        env(safe-area-inset-top, 0px) -
+        env(safe-area-inset-bottom, 0px)
+    );
+}
+
 .sidebar{
     width: 180px;
     min-height: 100vh;

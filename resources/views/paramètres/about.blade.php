@@ -4,7 +4,7 @@
     <div class="container p-2">
 
         {{-- En-tête --}}
-        <div class="d-flex align-items-center mb-4">
+        <div class="d-flex align-items-center my-2 mb-2">
 
             <div class=" bg-opacity-10 rounded-3
                     d-flex align-items-center justify-content-center me-3"
