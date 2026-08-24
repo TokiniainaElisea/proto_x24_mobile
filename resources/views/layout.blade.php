@@ -13,12 +13,8 @@
 
 <body>
 
-    <div class="container-fluid">
-
         @include('navbar')
         @yield('content')
-
-    </div>
 
     <script src="{{ asset('js/chart.js') }}"></script>
     @stack('scripts')
