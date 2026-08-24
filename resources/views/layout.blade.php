@@ -12,9 +12,10 @@
 </head>
 
 <body>
-
+        <native:column class="w-full h-full safe-area-top"> 
         @include('navbar')
         @yield('content')
+</native:column>
 
     <script src="{{ asset('js/chart.js') }}"></script>
     @stack('scripts')
