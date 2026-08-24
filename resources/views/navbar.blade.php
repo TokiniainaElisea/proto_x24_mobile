@@ -1,4 +1,4 @@
-<nav class="navbar navbar-dark bg-dark border-bottom border-secondary shadow-sm">
+<nav class="navbar navbar-dark bg-dark border-bottom border-secondary shadow-sm fixed-top">
     <div class="container-fluid d-flex">
         <span class="navbar-brand text-decoration-none">
 
@@ -227,4 +227,7 @@
 
         </ul>
     </div>
+</div>
+<div style="height: 105px;">
+
 </div>

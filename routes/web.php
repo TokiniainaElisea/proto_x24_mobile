@@ -39,7 +39,7 @@ Route::prefix('/products')->controller(ProductController::class)->group(function
     Route::get('/new', 'new')->name('new_product');
 
     //store new product
-    Route::post('/store', 'store')->name('store_product');
+    Route::post('/store', 'store')->name('store_new_product');
 
     //show product
     Route::get('/show/{product}', 'show_product')->name('show_product');

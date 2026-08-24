@@ -3,7 +3,7 @@
     <div class="container-fluid">
         @if (session('success'))
             <div class="card-body bg-success text-light">
-                {{session('success')}}
+                {{ session('success') }}
             </div>
         @endif
         @include('products.options', ['categories' => $categories])
