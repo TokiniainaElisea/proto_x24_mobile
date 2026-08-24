@@ -13,7 +13,7 @@
 
 <body>
 
-    <div class="app-safe-area">
+    <div class="container-fluid">
 
         @include('navbar')
         @yield('content')
