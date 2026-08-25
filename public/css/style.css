@@ -3,7 +3,9 @@ body {
     margin: 0;
 }
 
-
+.modal{
+    padding-top : env(safe-area-inset-top, 20px);
+}
 .navbar {
     padding-top : env(safe-area-inset-top, 20px);
 }

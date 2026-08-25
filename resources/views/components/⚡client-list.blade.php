@@ -58,178 +58,191 @@ new class extends Component {
     {{-- Liste --}}
     <div class="card border-0 shadow-sm">
 
-        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+    {{-- Header --}}
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
 
-            <span class="fw-bold">
+        <span class="fw-bold">
+            <i class="bi bi-people-fill text-primary me-1"></i>
+            Clients
+        </span>
 
-                <i class="bi bi-people-fill text-primary me-1"></i>
-                Clients
+        <span class="badge bg-primary">
+            {{ $clients->total() }} client(s)
+        </span>
 
-            </span>
-
-            <span class="badge bg-primary">
-
-                {{ $clients->total() }} client(s)
-
-            </span>
-
-        </div>
+    </div>
 
 
-        <div class="card-body p-0">
+    <div class="card-body p-0">
 
-            <div class="table-responsive">
+        {{-- Scroll horizontal sur petits écrans --}}
+        <div class="table-responsive">
 
-                <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover align-middle mb-0 text-nowrap"
+                style="min-width: 750px;">
 
-                    <thead class="table-dark">
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th class="ps-3" style="width: 130px;">
+                            N° client
+                        </th>
+
+                        <th style="width: 160px;">
+                            Nom
+                        </th>
+
+                        <th style="width: 160px;">
+                            Prénom
+                        </th>
+
+                        <th style="width: 160px;">
+                            Téléphone
+                        </th>
+
+                        <th style="width: 140px;">
+                            Ville
+                        </th>
+
+                        <th class="text-center" style="width: 150px;">
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @forelse ($clients as $client)
 
                         <tr>
 
-                            <th class="ps-3">
-                                N° client
-                            </th style="min-width:55px">
+                            {{-- Numéro client --}}
+                            <td class="ps-3">
 
-                            <th style="min-width:100px">
-                                Nom
-                            </th>
+                                <span class="badge bg-light text-dark border">
 
-                            <th style="min-width:120px">
-                                Prénom
-                            </th>
+                                    <i class="bi bi-person-vcard me-1"></i>
 
-                            <th style="min-width:90px">
-                                Téléphone
-                            </th>
+                                    {{ $client->client_number }}
 
-                            <th style="min-width:55px">
-                                Ville
-                            </th>
+                                </span>
 
-                            <th class="text-center">
-                                Action
-                            </th>
+                            </td>
+
+
+                            {{-- Nom --}}
+                            <td class="fw-semibold">
+
+                                {{ $client->name }}
+
+                            </td>
+
+
+                            {{-- Prénom --}}
+                            <td>
+
+                                {{ $client->firstname }}
+
+                            </td>
+
+
+                            {{-- Téléphone --}}
+                            <td>
+
+                                @if ($client->phone)
+
+                                    <span>
+                                        <i class="bi bi-telephone-fill text-success me-1"></i>
+                                        {{ '0' . $client->phone }}
+                                    </span>
+
+                                @else
+
+                                    <span class="text-muted">
+                                        <i class="bi bi-dash-circle me-1"></i>
+                                        Indisponible
+                                    </span>
+
+                                @endif
+
+                            </td>
+
+
+                            {{-- Ville --}}
+                            <td>
+
+                                @if ($client->town)
+
+                                    <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+                                    {{ $client->town }}
+
+                                @else
+
+                                    <span class="text-muted">
+                                        Indisponible
+                                    </span>
+
+                                @endif
+
+                            </td>
+
+
+                            {{-- Action --}}
+                            <td class="text-center">
+
+                                <button
+                                    type="button"
+                                    wire:click="selectClient({{ $client }})"
+                                    class="btn btn-sm btn-outline-success"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Sélectionner {{ $client->name }}">
+
+                                    <i class="bi bi-person-check-fill me-1"></i>
+
+                                </button>
+
+                            </td>
 
                         </tr>
 
-                    </thead>
 
+                    @empty
 
-                    <tbody>
+                        <tr>
 
-                        @forelse ($clients as $client)
-                            <tr>
+                            <td colspan="6" class="text-center py-5">
 
-                                <td class="ps-3">
+                                <i class="bi bi-person-x text-muted"
+                                    style="font-size: 2.5rem;">
+                                </i>
 
-                                    <span class="badge bg-light text-dark border">
+                                <h6 class="fw-bold mt-3">
+                                    Aucun client trouvé
+                                </h6>
 
-                                        <i class="bi bi-person-vcard me-1"></i>
+                                <small class="text-muted">
+                                    Essayez avec un autre nom ou numéro client.
+                                </small>
 
-                                        {{ $client->client_number }}
+                            </td>
 
-                                    </span>
+                        </tr>
 
-                                </td>
+                    @endforelse
 
+                </tbody>
 
-                                <td class="fw-semibold">
-
-                                    {{ $client->name }}
-
-                                </td>
-
-
-                                <td>
-
-                                    {{ $client->firstname }}
-
-                                </td>
-
-
-                                <td>
-
-                                    @if ($client->phone)
-                                        <span>
-
-                                            <i class="bi bi-telephone-fill text-success me-1"></i>
-
-                                            {{ '0' . $client->phone }}
-
-                                        </span>
-                                    @else
-                                        <span class="text-muted">
-
-                                            <i class="bi bi-dash-circle me-1"></i>
-                                            Indisponible
-
-                                        </span>
-                                    @endif
-
-                                </td>
-
-
-                                <td>
-
-                                    @if ($client->town)
-                                        <i class="bi bi-geo-alt-fill text-danger me-1"></i>
-
-                                        {{ $client->town }}
-                                    @else
-                                        <span class="text-muted">
-                                            Indisponible
-                                        </span>
-                                    @endif
-
-                                </td>
-
-
-                                <td class="text-center">
-
-                                    <button type="button" wire:click="selectClient({{ $client }})"
-                                        class="btn btn-sm btn-outline-success" data-bs-dismiss="modal"
-                                        aria-label="Sélectionner {{ $client->name }}">
-
-                                        <i class="bi bi-person-check-fill me-1"></i>
-                                        Sélectionner
-
-                                    </button>
-
-                                </td>
-
-                            </tr>
-
-                        @empty
-
-                            <tr>
-
-                                <td colspan="6" class="text-center py-5">
-
-                                    <i class="bi bi-person-x text-muted" style="font-size: 2.5rem;">
-                                    </i>
-
-                                    <h6 class="fw-bold mt-3">
-                                        Aucun client trouvé
-                                    </h6>
-
-                                    <small class="text-muted">
-                                        Essayez avec un autre nom ou numéro client.
-                                    </small>
-
-                                </td>
-
-                            </tr>
-                        @endforelse
-
-                    </tbody>
-
-                </table>
-
-            </div>
+            </table>
 
         </div>
 
     </div>
+
+</div>
 
 
     {{-- Pagination --}}

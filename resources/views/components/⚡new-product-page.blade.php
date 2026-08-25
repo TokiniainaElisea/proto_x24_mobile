@@ -7,16 +7,13 @@ use App\Models\Numbering;
 use App\Models\Product;
 use App\Models\Provider;
 use Illuminate\Support\Facades\Storage;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Native\Mobile\Attributes\OnNative;
 use Native\Mobile\Events\Camera\PhotoTaken;
 use Native\Mobile\Events\Gallery\MediaSelected;
 use Native\Mobile\Facades\Camera;
-use Native\Mobile\Facades\File;
 
-new class extends Component
-{
+new class extends Component {
     // ---- Champs du formulaire ----
     public string $name_product = '';
     public string $price = '';
@@ -30,9 +27,7 @@ new class extends Component
     public string $matter = '';
 
     // ---- Photo ----
-    public ?string $tempPhotoPath = null;   // chemin temporaire (device)
-    public ?string $photoPreview = null;   // pour affichage (si possible)
-    public ?string $savedImagePath = null; // chemin final stocké en DB
+    public ?string $tempPhotoPath = null; // chemin temporaire device
     public string $message = '';
     public string $messageType = 'info';
 
@@ -73,7 +68,6 @@ new class extends Component
         }
 
         $this->tempPhotoPath = $path;
-        $this->photoPreview = $path;
         $this->message = 'Photo capturée : ' . basename($path);
         $this->messageType = 'success';
     }
@@ -81,9 +75,7 @@ new class extends Component
     #[OnNative(MediaSelected::class)]
     public function handleMediaSelected($success, $files = [], $count = 0, ?string $id = null): void
     {
-        // Signature peut varier selon version du plugin
         if (is_array($success) && isset($success['files'])) {
-            // parfois tout arrive en un seul array
             $payload = $success;
             $files = $payload['files'] ?? [];
             $id = $payload['id'] ?? $id;
@@ -110,7 +102,6 @@ new class extends Component
         }
 
         $this->tempPhotoPath = $path;
-        $this->photoPreview = $path;
         $this->message = 'Image sélectionnée : ' . basename($path);
         $this->messageType = 'success';
     }
@@ -118,9 +109,7 @@ new class extends Component
     public function removePhoto(): void
     {
         $this->tempPhotoPath = null;
-        $this->photoPreview = null;
-        $this->savedImagePath = null;
-        $this->message = 'Photo supprimée';
+        $this->message = 'Photo retirée';
         $this->messageType = 'info';
     }
 
@@ -128,58 +117,54 @@ new class extends Component
     public function store(): void
     {
         $this->validate([
-            'name_product'      => 'required|string|max:255',
-            'price'             => 'required|numeric|min:0',
-            'id_provider'       => 'required|exists:providers,id', // adapte le nom de table si besoin
-            'enter_date'        => 'required|date',
-            'initial_quantity'  => 'required|integer|min:1',
-            'provider_price'    => 'required|numeric|min:0',
-            'id_category'       => 'required|exists:categories,id',
-            'size'              => 'nullable|string|max:50',
-            'color'             => 'nullable|string|max:50',
-            'matter'            => 'nullable|string|max:100',
+            'name_product' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'id_provider' => 'required|exists:providers,id',
+            'enter_date' => 'required|date',
+            'initial_quantity' => 'required|integer|min:1',
+            'provider_price' => 'required|numeric|min:0',
+            'id_category' => 'required|exists:categories,id',
+            'size' => 'nullable|string|max:50',
+            'color' => 'nullable|string|max:50',
+            'matter' => 'nullable|string|max:100',
         ]);
 
-        // --- Gestion de la photo ---
+        // Chemin/URL complète à stocker en BDD (ex: /_assets/storage/uploads/product/xxx.jpg)
         $imagePathForDb = '';
 
         if ($this->tempPhotoPath) {
             $imagePathForDb = $this->savePhoto($this->tempPhotoPath);
         }
 
-        // --- Detail ---
         $detail = Detail::create([
-            'size'   => $this->size,
-            'color'  => $this->color,
+            'size' => $this->size,
+            'color' => $this->color,
             'matter' => $this->matter,
         ]);
 
-        // --- Product ---
         $productPrefix = Numbering::first() ?? 'PRD';
 
         $product = Product::create([
             'name_product' => $this->name_product,
-            'price'        => $this->price,
-            'provider_id'  => $this->id_provider,
-            'image_path'   => $imagePathForDb,
-            'category_id'  => $this->id_category,
-            'detail_id'    => $detail->id,
+            'price' => $this->price,
+            'provider_id' => $this->id_provider,
+            'image_path' => $imagePathForDb, // URL complète utilisable en src
+            'category_id' => $this->id_category,
+            'detail_id' => $detail->id,
         ]);
 
-        // Référence
         if (is_string($productPrefix)) {
             $product->update(['reference' => $productPrefix . $product->id]);
         } else {
             $product->update(['reference' => $productPrefix->product_prefix . $product->id]);
         }
 
-        // --- Mouvement stock ---
         Mouvement::create([
-            'enter_date'       => $this->enter_date,
+            'enter_date' => $this->enter_date,
             'initial_quantity' => $this->initial_quantity,
-            'in_stock'         => $this->initial_quantity,
-            'provider_price'   => $this->provider_price,
-            'product_id'       => $product->id,
+            'in_stock' => $this->initial_quantity,
+            'provider_price' => $this->provider_price,
+            'product_id' => $product->id,
         ]);
 
         session()->flash('success', 'Nouveau produit ajouté');
@@ -188,55 +173,53 @@ new class extends Component
     }
 
     /**
-     * Sauvegarde la photo depuis le chemin temporaire natif
-     * vers public/uploads/product (ou storage si besoin).
+     * Copie la photo temporaire vers le stockage persistant
+     * et retourne l'URL complète à mettre en BDD.
      */
     protected function savePhoto(string $tempPath): string
     {
         $filename = time() . '_' . uniqid() . '.jpg';
         $relativePath = 'uploads/product/' . $filename;
 
-        // Dossier cible (comme ton ancien code)
-        $destinationDir = base_path('public/uploads/product');
-        if (!is_dir($destinationDir)) {
-            mkdir($destinationDir, 0777, true);
+        if (!is_string($tempPath) || $tempPath === '' || !file_exists($tempPath)) {
+            $this->message = 'Photo temporaire introuvable.';
+            $this->messageType = 'danger';
+            return '';
         }
-        $destination = $destinationDir . DIRECTORY_SEPARATOR . $filename;
 
-        // 1) Essai avec File::move (plugin nativephp/mobile-file) — idéal en native:run
+        $contents = @file_get_contents($tempPath);
+        if ($contents === false || $contents === '') {
+            $this->message = 'Impossible de lire la photo.';
+            $this->messageType = 'danger';
+            return '';
+        }
+
+        // 1) Disque persistant NativePHP
         try {
-            $result = File::move($tempPath, $destination);
-            $ok = $result === true || (is_array($result) && ($result['success'] ?? false));
-
+            $ok = Storage::disk('mobile_public')->put($relativePath, $contents);
             if ($ok) {
-                return $relativePath;
+                @unlink($tempPath);
+
+                // URL complète → à stocker en BDD et utiliser directement en <img src="...">
+                return Storage::disk('mobile_public')->url($relativePath);
             }
         } catch (\Throwable $e) {
-            // on continue
+            // continue
         }
 
-        // 2) Essai classique PHP
-        if (file_exists($tempPath)) {
-            $contents = @file_get_contents($tempPath);
-            if ($contents !== false && file_put_contents($destination, $contents) !== false) {
-                @unlink($tempPath);
-                return $relativePath;
-            }
-        }
-
-        // 3) Fallback Storage Laravel
+        // 2) Fallback disque public Laravel (même root storage/app/public)
         try {
-            if (file_exists($tempPath)) {
-                Storage::disk('public')->put('uploads/product/' . $filename, file_get_contents($tempPath));
+            $ok = Storage::disk('public')->put($relativePath, $contents);
+            if ($ok) {
                 @unlink($tempPath);
-                return 'uploads/product/' . $filename;
+
+                return Storage::disk('public')->url($relativePath);
             }
         } catch (\Throwable $e) {
             // ignore
         }
 
-        // En Jump : le fichier n'est pas accessible → on enregistre quand même le produit sans image
-        $this->message = 'Photo non accessible (mode Jump ?). Produit enregistré sans image.';
+        $this->message = 'Impossible d\'enregistrer la photo. Produit sans image.';
         $this->messageType = 'warning';
 
         return '';
@@ -244,11 +227,7 @@ new class extends Component
 
     public function resetForm(): void
     {
-        $this->reset([
-            'name_product', 'price', 'enter_date', 'initial_quantity',
-            'provider_price', 'size', 'color', 'matter',
-            'tempPhotoPath', 'photoPreview', 'savedImagePath', 'message',
-        ]);
+        $this->reset(['name_product', 'price', 'enter_date', 'initial_quantity', 'provider_price', 'size', 'color', 'matter', 'tempPhotoPath', 'message']);
         $this->enter_date = now()->format('Y-m-d');
         $this->messageType = 'info';
     }
@@ -287,7 +266,7 @@ new class extends Component
             </div>
             <div class="card-body p-4">
                 <div class="row g-3">
-                    {{-- Photo NativePHP --}}
+                    {{-- Photo --}}
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">
                             <i class="bi bi-image me-1 text-primary"></i>
@@ -309,7 +288,8 @@ new class extends Component
                                     <div class="small text-muted mb-1 text-truncate">
                                         {{ basename($tempPhotoPath) }}
                                     </div>
-                                    <button type="button" class="btn btn-sm btn-outline-danger w-100" wire:click="removePhoto">
+                                    <button type="button" class="btn btn-sm btn-outline-danger w-100"
+                                        wire:click="removePhoto">
                                         <i class="bi bi-trash me-1"></i> Retirer
                                     </button>
                                 </div>
@@ -328,8 +308,8 @@ new class extends Component
                             Nom du produit
                         </label>
                         <input type="text" id="name_product" wire:model="name_product"
-                               class="form-control @error('name_product') is-invalid @enderror"
-                               placeholder="Ex : T-shirt classique">
+                            class="form-control @error('name_product') is-invalid @enderror"
+                            placeholder="Ex : T-shirt classique">
                         @error('name_product')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -343,8 +323,8 @@ new class extends Component
                         </label>
                         <div class="input-group">
                             <input type="number" id="price" wire:model="price"
-                                   class="form-control @error('price') is-invalid @enderror"
-                                   placeholder="0" step="any">
+                                class="form-control @error('price') is-invalid @enderror" placeholder="0"
+                                step="any">
                             <span class="input-group-text">Ar</span>
                         </div>
                         @error('price')
@@ -358,7 +338,8 @@ new class extends Component
                             <i class="bi bi-truck me-1 text-info"></i>
                             Fournisseur
                         </label>
-                        <select id="id_provider" wire:model="id_provider" class="form-select @error('id_provider') is-invalid @enderror">
+                        <select id="id_provider" wire:model="id_provider"
+                            class="form-select @error('id_provider') is-invalid @enderror">
                             @foreach ($providers as $provider)
                                 <option value="{{ $provider->id }}">{{ $provider->name_provider }}</option>
                             @endforeach
@@ -387,7 +368,7 @@ new class extends Component
                             Date d'approvisionnement
                         </label>
                         <input type="date" id="enter_date" wire:model="enter_date"
-                               class="form-control @error('enter_date') is-invalid @enderror">
+                            class="form-control @error('enter_date') is-invalid @enderror">
                         @error('enter_date')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -399,8 +380,7 @@ new class extends Component
                             Quantité initiale
                         </label>
                         <input type="number" id="initial_quantity" wire:model="initial_quantity"
-                               class="form-control @error('initial_quantity') is-invalid @enderror"
-                               placeholder="0">
+                            class="form-control @error('initial_quantity') is-invalid @enderror" placeholder="0">
                         @error('initial_quantity')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -413,8 +393,8 @@ new class extends Component
                         </label>
                         <div class="input-group">
                             <input type="number" id="provider_price" wire:model="provider_price"
-                                   class="form-control @error('provider_price') is-invalid @enderror"
-                                   placeholder="0" step="any">
+                                class="form-control @error('provider_price') is-invalid @enderror" placeholder="0"
+                                step="any">
                             <span class="input-group-text">Ar</span>
                         </div>
                         @error('provider_price')
@@ -440,7 +420,8 @@ new class extends Component
                             <i class="bi bi-tags-fill me-1 text-info"></i>
                             Catégorie
                         </label>
-                        <select id="id_category" wire:model="id_category" class="form-select @error('id_category') is-invalid @enderror">
+                        <select id="id_category" wire:model="id_category"
+                            class="form-select @error('id_category') is-invalid @enderror">
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name_category }}</option>
                             @endforeach
@@ -456,8 +437,7 @@ new class extends Component
                             Taille
                         </label>
                         <input type="text" id="size" wire:model="size"
-                               class="form-control @error('size') is-invalid @enderror"
-                               placeholder="Ex : M, L, XL...">
+                            class="form-control @error('size') is-invalid @enderror" placeholder="Ex : M, L, XL...">
                         @error('size')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -469,8 +449,7 @@ new class extends Component
                             Couleur
                         </label>
                         <input type="text" id="color" wire:model="color"
-                               class="form-control @error('color') is-invalid @enderror"
-                               placeholder="Ex : Noir">
+                            class="form-control @error('color') is-invalid @enderror" placeholder="Ex : Noir">
                         @error('color')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -482,8 +461,7 @@ new class extends Component
                             Matière
                         </label>
                         <input type="text" id="matter" wire:model="matter"
-                               class="form-control @error('matter') is-invalid @enderror"
-                               placeholder="Ex : Coton">
+                            class="form-control @error('matter') is-invalid @enderror" placeholder="Ex : Coton">
                         @error('matter')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

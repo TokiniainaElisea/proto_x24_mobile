@@ -9,7 +9,6 @@ use Native\Mobile\Attributes\OnNative;
 use Native\Mobile\Events\Camera\PhotoTaken;
 use Native\Mobile\Events\Gallery\MediaSelected;
 use Native\Mobile\Facades\Camera;
-use Native\Mobile\Facades\File;
 
 new class extends Component
 {
@@ -26,7 +25,7 @@ new class extends Component
     public string $matter = '';
 
     // Image
-    public ?string $currentImagePath = null; // image actuelle en DB
+    public ?string $currentImagePath = null; // URL complète en DB
     public ?string $tempPhotoPath = null;    // nouvelle photo (temporaire device)
     public bool $removeCurrentImage = false;
     public string $message = '';
@@ -155,9 +154,9 @@ new class extends Component
             // Nouvelle photo → supprimer l'ancienne puis sauver la nouvelle
             $this->deleteOldImage($product->image_path);
 
-            $newPath = $this->savePhoto($this->tempPhotoPath);
-            if ($newPath !== '') {
-                $product->image_path = $newPath;
+            $newUrl = $this->savePhoto($this->tempPhotoPath);
+            if ($newUrl !== '') {
+                $product->image_path = $newUrl; // URL complète
             }
         } elseif ($this->removeCurrentImage) {
             // Suppression sans remplacement
@@ -189,25 +188,31 @@ new class extends Component
         $this->redirect(route('produits'), navigate: true);
     }
 
-    protected function deleteOldImage(?string $relativePath): void
+    /**
+     * Supprime l'ancienne image.
+     * Accepte soit une URL complète (/_assets/storage/...), soit un chemin relatif.
+     */
+    protected function deleteOldImage(?string $storedPath): void
     {
-        if (empty($relativePath)) {
+        if (empty($storedPath) || str_contains($storedPath, 'sans.png')) {
             return;
         }
 
-        // Ne pas supprimer le placeholder
-        if (str_contains($relativePath, 'sans.png')) {
+        $relativePath = $this->toRelativeStoragePath($storedPath);
+
+        if ($relativePath === '') {
             return;
         }
 
-        $fullPath = base_path('public/' . ltrim($relativePath, '/'));
-
-        if (file_exists($fullPath)) {
-            @unlink($fullPath);
-            return;
+        try {
+            if (Storage::disk('mobile_public')->exists($relativePath)) {
+                Storage::disk('mobile_public')->delete($relativePath);
+                return;
+            }
+        } catch (\Throwable $e) {
+            // ignore
         }
 
-        // Fallback Storage public
         try {
             if (Storage::disk('public')->exists($relativePath)) {
                 Storage::disk('public')->delete($relativePath);
@@ -215,56 +220,92 @@ new class extends Component
         } catch (\Throwable $e) {
             // ignore
         }
+
+        // Ancien emplacement éventuel (base_path public/)
+        $legacy = base_path('public/' . ltrim($relativePath, '/'));
+        if (file_exists($legacy)) {
+            @unlink($legacy);
+        }
     }
 
+    /**
+     * Convertit une URL stockée en BDD en chemin relatif du disque.
+     * Ex: /_assets/storage/uploads/product/x.jpg → uploads/product/x.jpg
+     *     /storage/uploads/product/x.jpg         → uploads/product/x.jpg
+     *     uploads/product/x.jpg                  → uploads/product/x.jpg
+     */
+    protected function toRelativeStoragePath(string $storedPath): string
+    {
+        $path = parse_url($storedPath, PHP_URL_PATH) ?: $storedPath;
+        $path = ltrim($path, '/');
+
+        foreach (['_assets/storage/', 'storage/'] as $prefix) {
+            if (str_starts_with($path, $prefix)) {
+                return substr($path, strlen($prefix));
+            }
+        }
+
+        // Déjà un chemin relatif type uploads/product/...
+        if (str_starts_with($path, 'uploads/')) {
+            return $path;
+        }
+
+        return $path;
+    }
+
+    /**
+     * Sauvegarde la nouvelle photo et retourne l'URL complète pour la BDD.
+     */
     protected function savePhoto(string $tempPath): string
     {
         $filename = time() . '_' . uniqid() . '.jpg';
         $relativePath = 'uploads/product/' . $filename;
 
-        $destinationDir = base_path('public/uploads/product');
-        if (!is_dir($destinationDir)) {
-            mkdir($destinationDir, 0777, true);
+        if (!is_string($tempPath) || $tempPath === '' || !file_exists($tempPath)) {
+            $this->message = 'Photo temporaire introuvable.';
+            $this->messageType = 'danger';
+            return '';
         }
-        $destination = $destinationDir . DIRECTORY_SEPARATOR . $filename;
 
-        // 1) File::move (native:run)
+        $contents = @file_get_contents($tempPath);
+        if ($contents === false || $contents === '') {
+            $this->message = 'Impossible de lire la photo.';
+            $this->messageType = 'danger';
+            return '';
+        }
+
+        // 1) Disque persistant NativePHP
         try {
-            $result = File::move($tempPath, $destination);
-            $ok = $result === true || (is_array($result) && ($result['success'] ?? false));
+            $ok = Storage::disk('mobile_public')->put($relativePath, $contents);
             if ($ok) {
-                return $relativePath;
+                @unlink($tempPath);
+                return Storage::disk('mobile_public')->url($relativePath);
             }
         } catch (\Throwable $e) {
             // continue
         }
 
-        // 2) PHP classique
-        if (file_exists($tempPath)) {
-            $contents = @file_get_contents($tempPath);
-            if ($contents !== false && file_put_contents($destination, $contents) !== false) {
-                @unlink($tempPath);
-                return $relativePath;
-            }
-        }
-
-        // 3) Storage
+        // 2) Fallback disque public
         try {
-            if (file_exists($tempPath)) {
-                Storage::disk('public')->put('uploads/product/' . $filename, file_get_contents($tempPath));
+            $ok = Storage::disk('public')->put($relativePath, $contents);
+            if ($ok) {
                 @unlink($tempPath);
-                return 'uploads/product/' . $filename;
+                return Storage::disk('public')->url($relativePath);
             }
         } catch (\Throwable $e) {
             // ignore
         }
 
-        $this->message = 'Nouvelle photo non accessible (mode Jump ?). Les autres champs seront quand même mis à jour.';
-        $this->messageType = 'warning';
+        $this->message = 'Impossible d\'enregistrer la photo (stockage).';
+        $this->messageType = 'danger';
 
         return '';
     }
 
+    /**
+     * Image affichée dans le formulaire d'édition.
+     * currentImagePath est déjà une URL complète (ou vide).
+     */
     public function getDisplayImageProperty(): string
     {
         if ($this->removeCurrentImage && !$this->tempPhotoPath) {
@@ -272,7 +313,8 @@ new class extends Component
         }
 
         if ($this->currentImagePath && !$this->removeCurrentImage) {
-            return asset($this->currentImagePath);
+            // Déjà une URL complète → utilisation directe
+            return $this->currentImagePath;
         }
 
         return asset('uploads/product/sans.png');
@@ -498,7 +540,7 @@ new class extends Component
             </div>
         </div>
 
-        {{-- Stock (info seulement) --}}
+        {{-- Stock --}}
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-header bg-dark text-white">
                 <h5 class="mb-0">
