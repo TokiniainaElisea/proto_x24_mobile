@@ -255,7 +255,7 @@ new class extends Component {
 
                             <input type="number" min="1"
                                 class="form-control text-center @error('selectedProducts.' . $key . '.quantity') is-invalid @enderror"
-                                wire:model.live="selectedProducts[{{ $key }}]['quantity']">
+                                wire:model.blur="selectedProducts[{{ $key }}]['quantity']">
 
                             <button type="button" class="btn btn-outline-danger"
                                 wire:click="deleteProduct({{ $product['id'] }})" title="Supprimer du panier">
