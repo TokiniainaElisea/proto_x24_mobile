@@ -483,4 +483,11 @@ return [
             'landscape_right' => false,
         ],
     ],
+
+    'splash' => [
+    'show' => true,
+    'theme' => 'dark', 
+    'background_color' => '#1E293B', // Couleur de fond (code HEX)
+    'image' => public_path('icon.png'), // Votre logo/image
+],
 ];
