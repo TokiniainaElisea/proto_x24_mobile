@@ -4,11 +4,10 @@ $id;
 
 <div class="modal fade shadow-lg" tabindex="-1" aria-hidden="true" id="{{$id}}">
 
-<div class="modal-dialog modal-dialog-centered">
+<div class="modal-dialog modal-dialog-scrollable">
 
     <div class="modal-content border-0 shadow">
 
-        {{-- Header --}}
         <div class="modal-header bg-dark text-white">
 
             <div class="d-flex align-items-center">
@@ -44,15 +43,12 @@ $id;
 
         </div>
 
-
-        {{-- Corps --}}
         <div class="modal-body p-4">
 
             <form action="{{route('new_client')}}" method="post">
 
                 @csrf
 
-                {{-- Civilité --}}
                 <div class="mb-3">
 
                     <label
@@ -84,8 +80,6 @@ $id;
 
                 </div>
 
-
-                {{-- Nom / Prénom --}}
                 <div class="row">
 
                     <div class="col-6">
@@ -163,9 +157,6 @@ $id;
                     </div>
 
                 </div>
-
-
-                {{-- Adresse --}}
                 <div class="mb-3">
 
                     <label
@@ -185,8 +176,6 @@ $id;
 
                 </div>
 
-
-                {{-- Ville --}}
                 <div class="mb-4">
 
                     <label
@@ -206,8 +195,6 @@ $id;
 
                 </div>
 
-
-                {{-- Actions --}}
                 <div class="d-flex justify-content-end gap-2">
 
                     <button
