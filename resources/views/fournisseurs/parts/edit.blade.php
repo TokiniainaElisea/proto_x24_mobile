@@ -11,7 +11,7 @@
      aria-hidden="true"
      tabindex="-1">
 
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-scrollable">
 
         <div class="modal-content border-0 shadow">
 
