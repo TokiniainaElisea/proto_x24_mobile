@@ -19,7 +19,7 @@
     <script src="{{ asset('js/chart.js') }}"></script>
     @stack('scripts')
     <script src="{{ asset('js/bootstrap.bundle.js') }}"></script>
-
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>
