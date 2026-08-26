@@ -1,7 +1,9 @@
 
 body {
     margin: 0;
+    -webkit-overflow-scrolling: touch;
 }
+
 
 .modal{
     padding-top : env(safe-area-inset-top, 20px);
@@ -18,6 +20,7 @@ body {
         env(safe-area-inset-bottom, 0px)
     );
 }
+
 
 .sidebar{
     width: 180px;
