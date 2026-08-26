@@ -6,7 +6,7 @@
 
 <div class="modal fade" id="{{'category_'.$id}}" aria-hidden="true" tabindex="-1">
 
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
 
         <div class="modal-content border-0 shadow-lg">
 
@@ -15,7 +15,7 @@
 
                 <div class="d-flex align-items-center">
 
-                    <div class="bg-warning bg-opacity-25 rounded-3
+                    <div class="bg-opacity-25 rounded-3
                                 d-flex align-items-center justify-content-center me-3"
                         style="width: 42px; height: 42px;">
 
@@ -84,7 +84,7 @@
 
                         <div class="d-flex align-items-center">
 
-                            <div class="bg-primary bg-opacity-10 rounded-2
+                            <div class="bg-opacity-10 rounded-2
                                         d-flex align-items-center justify-content-center me-2"
                                 style="width: 36px; height: 36px;">
 
