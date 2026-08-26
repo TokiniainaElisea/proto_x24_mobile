@@ -5,11 +5,10 @@ $client;
 
 <div class="modal fade shadow-lg" tabindex="-1" aria-hidden="true" id="{{$id}}">
 
-<div class="modal-dialog modal-dialog-centered">
+<div class="modal-dialog modal-dialog-scrollable">
 
     <div class="modal-content border-0 shadow">
 
-        {{-- Header --}}
         <div class="modal-header bg-dark text-white">
 
             <div class="d-flex align-items-center">
@@ -45,8 +44,6 @@ $client;
 
         </div>
 
-
-        {{-- Corps --}}
         <div class="modal-body p-4">
 
             <form action="{{route('update_client', $client)}}" method="post">
@@ -54,7 +51,6 @@ $client;
                 @csrf
                 @method('put')
 
-                {{-- Civilité --}}
                 <div class="mb-3">
 
                     <label
@@ -90,8 +86,6 @@ $client;
 
                 </div>
 
-
-                {{-- Nom / Prénom --}}
                 <div class="row">
 
                     <div class="col-6">
@@ -141,8 +135,6 @@ $client;
 
                 </div>
 
-
-                {{-- Téléphone --}}
                 <div class="mb-3">
 
                     <label
@@ -170,8 +162,6 @@ $client;
 
                 </div>
 
-
-                {{-- Adresse --}}
                 <div class="mb-3">
 
                     <label
@@ -191,8 +181,6 @@ $client;
 
                 </div>
 
-
-                {{-- Ville --}}
                 <div class="mb-4">
 
                     <label
@@ -212,8 +200,6 @@ $client;
 
                 </div>
 
-
-                {{-- Actions --}}
                 <div class="d-flex justify-content-end gap-2">
 
                     <button
