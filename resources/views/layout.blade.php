@@ -11,7 +11,7 @@
     <title>Proto</title>
 </head>
 
-<body>
+<body class="keyboard-visible">
 
         @include('navbar')
         @yield('content')

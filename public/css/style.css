@@ -4,6 +4,13 @@ body {
     -webkit-overflow-scrolling: touch;
 }
 
+.bottom-nav {
+    transition: transform 0.2s ease-out;
+}
+
+body.keyboard-visible .bottom-nav {
+    transform: translateY(100%);
+}
 
 .modal{
     padding-top : env(safe-area-inset-top, 20px);
