@@ -90,7 +90,9 @@ jobs:
         run: |
           php artisan native:install android --force --no-interaction
 
-     
+      - name : Install front end dependencies
+        run : |
+          npm ci
       - name : Build front end
         run : |
           npm run build
