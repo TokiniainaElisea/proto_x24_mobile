@@ -12,6 +12,10 @@ body.keyboard-visible .bottom-nav {
     transform: translateY(100%);
 }
 
+.modal .bottom-nav{
+    transform: translateY(100%);
+}
+
 .modal{
     padding-top : env(safe-area-inset-top, 20px);
 }
