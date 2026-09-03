@@ -90,9 +90,10 @@ jobs:
         run: |
           php artisan native:install android --force --no-interaction
 
-      # --------------------------------------------------
-      # 11. Build Debug APK (Auto-signé par Gradle)
-      # --------------------------------------------------
+     
+      - name : Build front end
+        run : |
+          npm run build
 # 10. Setup Android signing
       - name: Setup Android signing
         env:

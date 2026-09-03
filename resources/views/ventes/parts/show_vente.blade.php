@@ -19,6 +19,7 @@
                 <small class="text-muted">
                     Commande : <strong>{{ $sale->sale_reference }}</strong>
                 </small>
+                <a href="{{ route('downloadInvoice', $sale) }}" class="btn text-info"> <i class="bi bi-download"></i> Facture </a>
             </div>
 
             <a href="{{ route('ventes') }}" class="btn btn-outline-warning mb-2">

@@ -29,7 +29,8 @@
             </small>
 
         </div>
-        <button type="button" class="btn text-white" data-bs-dismiss="offcanvas" aria-label="Close"> <i class="bi bi-x fs-3"> </i> </button>
+        <button type="button" class="btn text-white" data-bs-dismiss="offcanvas" aria-label="Close"> <i
+                class="bi bi-x fs-3"> </i> </button>
     </div>
     <div class="offcanvas-body">
         <ul class="nav nav-pills flex-column gap-1">
@@ -97,20 +98,6 @@
             </li>
 
 
-            <li class="nav-item">
-
-                <a href="{{ route('provider') }}"
-                    class="nav-link text-white rounded-3
-                    {{ request()->routeIs('provider*') ? 'active bg-primary' : '' }}">
-
-                    <i class="bi bi-truck me-2"></i>
-                    Fournisseurs
-
-                </a>
-
-            </li>
-
-
             {{-- ================= FINANCE ================= --}}
             <li class="nav-item mt-3">
 
@@ -153,6 +140,19 @@
 
                     <i class="bi bi-people-fill me-2"></i>
                     Clients
+
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a href="{{ route('provider') }}"
+                    class="nav-link text-white rounded-3
+                    {{ request()->routeIs('provider*') ? 'active bg-primary' : '' }}">
+
+                    <i class="bi bi-truck me-2"></i>
+                    Fournisseurs
 
                 </a>
 

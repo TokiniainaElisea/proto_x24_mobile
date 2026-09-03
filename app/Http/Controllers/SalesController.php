@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SalesRequest;
+use App\Models\Company;
+use App\Models\SaleDetail;
 use App\Models\Sales;
 use Illuminate\Http\Request;
 
@@ -51,6 +53,18 @@ class SalesController extends Controller
     public function show_vente(Sales $sale){
         return view('ventes.parts.show_vente', [
             'sale' => $sale
+        ]);
+    }
+
+    //download invoice
+    public function downloadInvoice(Sales $sale){
+        $sale->load([
+        'client',
+        'saledetail.product',
+    ]);
+        return view('ventes.invoice', [
+            'sale' => $sale,
+            'company' => Company::first()
         ]);
     }
 }

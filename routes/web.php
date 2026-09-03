@@ -28,6 +28,9 @@ Route::prefix('ventes')->controller(SalesController::class)->group(function(){
 
     //show vente
     Route::get('/show/{sale}', 'show_vente')->name('show_vente');
+
+    //download invoice
+    Route::get('/invoice/{sale}', 'downloadInvoice')->name('downloadInvoice');
 });
 
 //product route

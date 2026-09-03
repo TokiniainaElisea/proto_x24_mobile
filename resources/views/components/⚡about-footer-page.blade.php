@@ -6,7 +6,7 @@ use Native\Mobile\Facades\Browser;
 new class extends Component {
     public function openPortfolio()
     {
-        Browser::inApp('https://elisea.vercel.app');
+        Browser::open('https://elisea.vercel.app');
     }
 };
 ?>
