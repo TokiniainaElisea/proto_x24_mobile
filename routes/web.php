@@ -19,7 +19,7 @@ Route::controller(DashboardController::class)->group(function(){
 });
 
 //ventes
-Route::prefix('ventes')->controller(SalesController::class)->group(function(){
+Route::prefix('/ventes')->controller(SalesController::class)->group(function(){
     //index
     Route::get('/', 'index')->name('ventes');
 
@@ -31,6 +31,9 @@ Route::prefix('ventes')->controller(SalesController::class)->group(function(){
 
     //download invoice
     Route::get('/invoice/{sale}', 'downloadInvoice')->name('downloadInvoice');
+
+    //save invoice to pdf
+    Route::post('/invoice/savepdf', 'savePdf')->name('savePdf');
 });
 
 //product route

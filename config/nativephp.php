@@ -143,6 +143,8 @@ return [
         // 'NSMicrophoneUsageDescription' => 'Used to record audio with your videos.',
         // 'NSPhotoLibraryUsageDescription' => 'Used to select photos for your post.',
         'camera'  => true,
+        'browser' => true,
+        
     ],
 
     /*

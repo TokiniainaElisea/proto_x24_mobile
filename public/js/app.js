@@ -1,5 +1,5 @@
-(function () {
-    function scrollFocusedIntoView(el) {
+//je crois que c'est clair :p 
+function scrollFocusedIntoView(el) {
         if (!el) return;
 
         // Attendre l'animation du clavier (Android ~250–400ms)
@@ -21,6 +21,7 @@
         }, 350);
     }
 
+window.addEventListener('DOMContentLoaded', function(){
     document.addEventListener('focusin', function (e) {
         const t = e.target;
         if (!t) return;
@@ -44,5 +45,5 @@
             }
         });
     }
-})();
+} );
 

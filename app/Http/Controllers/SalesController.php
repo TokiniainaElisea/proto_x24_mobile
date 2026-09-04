@@ -3,9 +3,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SalesRequest;
 use App\Models\Company;
-use App\Models\SaleDetail;
 use App\Models\Sales;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SalesController extends Controller
 {
@@ -50,21 +50,59 @@ class SalesController extends Controller
     }
 
     //show sale
-    public function show_vente(Sales $sale){
+    public function show_vente(Sales $sale)
+    {
         return view('ventes.parts.show_vente', [
-            'sale' => $sale
+            'sale' => $sale,
         ]);
     }
 
     //download invoice
-    public function downloadInvoice(Sales $sale){
+    public function downloadInvoice(Sales $sale)
+    {
         $sale->load([
-        'client',
-        'saledetail.product',
-    ]);
-        return view('ventes.invoice', [
-            'sale' => $sale,
-            'company' => Company::first()
+            'client',
+            'saledetail.product',
         ]);
+        return view('ventes.invoice', [
+            'sale'    => $sale,
+            'company' => Company::first(),
+        ]);
+    }
+
+    public function savePdf(Request $request)
+    {
+        try {
+            $request->validate([
+                'pdf'            => 'required|file|mimes:pdf|max:10240', // 10 Mo max
+                'sale_reference' => 'required|string|max:100',
+            ]);
+
+            $filename = 'facture-' . $request->sale_reference . '-' . now()->format('YmdHis') . '.pdf';
+
+            // Crée le dossier s'il n'existe pas
+            if (! Storage::exists('temp')) {
+                Storage::makeDirectory('temp');
+            }
+
+            $path = $request->file('pdf')->storeAs('temp', $filename);
+
+            $absolutePath = Storage::path($path);
+
+            return response()->json([
+                'success'  => true,
+                'path'     => $absolutePath,
+                'filename' => $filename,
+            ]);
+
+        } catch (\Throwable $e) {
+            // On renvoie l'erreur pour la voir côté front
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'file'    => $e->getFile(),
+                'line'    => $e->getLine(),
+            ], 500);
+        }
     }
 }

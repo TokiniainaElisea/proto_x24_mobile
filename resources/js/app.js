@@ -1,5 +1,4 @@
 import './bootstrap';
-import 'bootstrap'
 
 import { createApp } from 'vue';
 import Invoice from './components/Invoice.vue';

@@ -27,5 +27,4 @@
     "imports": {
         "#nativephp": "./vendor/nativephp/mobile/resources/dist/native.js"
     }
-    
 }

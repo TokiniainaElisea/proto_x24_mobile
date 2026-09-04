@@ -2,7 +2,7 @@
     <button type="button" class="btn btn-primary" @click="generatePdf">
         Télécharger PDF
     </button>
-    <div class="invoice-wrapper">
+    <div class="invoice-wrapper" ref="invoiceRef">
 
         <!-- EN-TÊTE -->
         <table class="header-table">
@@ -211,86 +211,102 @@
     </div>
 </template>
 
-
 <script setup>
-
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import html2pdf from 'html2pdf.js';
-import { Share, File, Browser } from '#nativephp';
+import { Share } from '#nativephp';
+import axios from 'axios'; // ou utilise Inertia / fetch
 
-// Props venant du composant parent
 const props = defineProps({
-    company: {
-        required: true
-    },
-
-    sale: {
-        required: true
-    }
+    company: { required: true },
+    sale: { required: true },
 });
 
-// Sous-total
+const invoiceRef = ref(null);
+const isGenerating = ref(false);
+
 const subtotal = computed(() => {
     return props.sale.saledetail.reduce((total, detail) => {
         return total + Number(detail.total_line);
     }, 0);
 });
 
-
-// Formatage des prix
 const formatPrice = (value) => {
-    return Number(value).toLocaleString('fr-FR', {
-        maximumFractionDigits: 0
-    });
+    return Number(value).toLocaleString('fr-FR', { maximumFractionDigits: 0 });
 };
 
-
-// Formatage de la date
 const formatDate = (date) => {
-    if (!date) {
-        return '';
-    }
-
+    if (!date) return '';
     return new Date(date).toLocaleDateString('fr-FR');
 };
 
-
 const generatePdf = async () => {
+    if (!invoiceRef.value || isGenerating.value) return;
 
-    const blob = await html2pdf()
-        .set({
-            margin: 10,
-            filename: `facture-${props.sale.sale_reference}.pdf`,
-            image: {
-                type: 'jpeg',
-                quality: 0.98
-            },
-            html2canvas: {
-                scale: 2
-            },
-            jsPDF: {
-                unit: 'mm',
-                format: 'a4',
-                orientation: 'portrait'
-            }
-        })
-        .from(invoice.value)
-        .outputPdf('blob');
+    isGenerating.value = true;
 
-    // Ici : Blob → fichier natif temporaire
+    try {
+        // 1. Générer le Blob PDF
+        const blob = await html2pdf()
+            .set({
+                margin: 10,
+                filename: `facture-${props.sale.sale_reference}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: 'portrait',
+                },
+            })
+            .from(invoiceRef.value)
+            .outputPdf('blob');
 
-    // Puis :
-    await Share.file(
-        `Facture ${props.sale.sale_reference}`,
-        'Voici votre facture.',
-        cheminDuPdf
-    );
+        // 2. Envoyer le Blob au backend pour le sauvegarder
+        const formData = new FormData();
+        formData.append('pdf', blob, `facture-${props.sale.sale_reference}.pdf`);
+        formData.append('sale_reference', props.sale.sale_reference);
+
+        const response = await axios.post('/ventes/invoice/savepdf', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+
+        const filePath = response.data.path; // chemin absolu renvoyé par le backend
+
+        // 3. Partager via le share sheet natif
+        await Share.file(
+            `Facture ${props.sale.sale_reference}`,
+            'Voici votre facture.',
+            filePath
+        );
+
+    } catch (error) {
+        console.error(error); // même si tu ne le vois pas sur Jump
+
+        let message = 'Erreur inconnue';
+
+        if (error.response) {
+            // Erreur HTTP (502, 500, 422…)
+            message = `Status: ${error.response.status}\n`;
+            message += JSON.stringify(error.response.data, null, 2);
+        } else if (error.request) {
+            message = 'Pas de réponse du serveur';
+        } else {
+            message = error.message;
+        }
+
+        alert(message); // ou Dialog.alert si tu as le plugin Dialog
+    } finally {
+        isGenerating.value = false;
+    }
 };
-
 </script>
 
 <style scoped>
-
 * {
     margin: 0;
     padding: 0;
@@ -496,5 +512,4 @@ body {
     margin-bottom: 4px;
     color: #212529;
 }
-
 </style>

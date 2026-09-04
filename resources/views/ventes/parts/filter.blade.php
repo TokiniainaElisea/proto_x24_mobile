@@ -1,9 +1,4 @@
 <div class="card shadow-sm my-3">
-
-    {{-- ================================================= --}}
-    {{-- HEADER                                             --}}
-    {{-- ================================================= --}}
-
     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
 
         <h5 class="mb-0">
@@ -13,11 +8,8 @@
 
         </h5>
 
-
-        {{-- Bouton accordion --}}
-
         <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#salesFilters"
-            aria-expanded="false" aria-controls="salesFilters">
+            aria-expanded="true" aria-controls="salesFilters">
 
             <i class="bi bi-chevron-down"></i>
 
@@ -29,23 +21,13 @@
 
     </div>
 
-
-    {{-- ================================================= --}}
-    {{-- CONTENU ACCORDION                                 --}}
-    {{-- ================================================= --}}
-
-    <div class="collapse" id="salesFilters">
+    <div class="accordion-collapse collapse" id="salesFilters">
 
         <div class="card-body">
 
             <form method="GET">
 
                 <div class="row g-3">
-
-
-                    {{-- ================================ --}}
-                    {{-- DATE DEBUT                       --}}
-                    {{-- ================================ --}}
 
                     <div class="col-lg-2 col-md-6">
 
