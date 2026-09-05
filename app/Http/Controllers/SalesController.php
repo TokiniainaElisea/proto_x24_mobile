@@ -74,18 +74,26 @@ class SalesController extends Controller
     {
         try {
             $request->validate([
-                'pdf'            => 'required|file|mimes:pdf|max:10240', // 10 Mo max
+                'pdf_base64'     => 'required|string',
                 'sale_reference' => 'required|string|max:100',
             ]);
 
             $filename = 'facture-' . $request->sale_reference . '-' . now()->format('YmdHis') . '.pdf';
 
-            // Crée le dossier s'il n'existe pas
+            // Décoder le base64
+            $pdfContent = base64_decode($request->pdf_base64);
+
+            if ($pdfContent === false) {
+                throw new \Exception('Base64 invalide');
+            }
+
+            // Sauvegarder
             if (! Storage::exists('temp')) {
                 Storage::makeDirectory('temp');
             }
 
-            $path = $request->file('pdf')->storeAs('temp', $filename);
+            $path = 'temp/' . $filename;
+            Storage::put($path, $pdfContent);
 
             $absolutePath = Storage::path($path);
 
@@ -96,7 +104,6 @@ class SalesController extends Controller
             ]);
 
         } catch (\Throwable $e) {
-            // On renvoie l'erreur pour la voir côté front
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),

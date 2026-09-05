@@ -10,10 +10,11 @@ body {
 
 body.keyboard-visible .bottom-nav {
     transform: translateY(100%);
+    padding-bottom: 40vh;
 }
 
-.modal .bottom-nav{
-    transform: translateY(100%);
+body .keyboard-viwible .modal{
+    padding-bottom: 40vh;
 }
 
 .modal{

@@ -21,7 +21,7 @@
                     </div>
 
                     <div v-if="company.phone" class="muted">
-                        Tél. : {{ company.phone }}
+                        Tél. : 0{{ company.phone }}
                     </div>
 
                     <div class="small" style="margin-top: 10px;">
@@ -85,7 +85,7 @@
             </div>
 
             <div v-if="sale.client?.phone" class="muted">
-                Tél. : {{ sale.client.phone }}
+                Tél. : 0{{ sale.client.phone }}
             </div>
         </div>
 
@@ -246,8 +246,8 @@ const generatePdf = async () => {
     isGenerating.value = true;
 
     try {
-        // 1. Générer le Blob PDF
-        const blob = await html2pdf()
+        // 1. Générer le PDF en base64
+        const base64 = await html2pdf()
             .set({
                 margin: 10,
                 filename: `facture-${props.sale.sale_reference}.pdf`,
@@ -264,20 +264,24 @@ const generatePdf = async () => {
                 },
             })
             .from(invoiceRef.value)
-            .outputPdf('blob');
+            .outputPdf('datauristring'); // ← important : datauristring
 
-        // 2. Envoyer le Blob au backend pour le sauvegarder
-        const formData = new FormData();
-        formData.append('pdf', blob, `facture-${props.sale.sale_reference}.pdf`);
-        formData.append('sale_reference', props.sale.sale_reference);
+        // On enlève le préfixe "data:application/pdf;filename=generated.pdf;base64,"
+        const pureBase64 = base64.split(',')[1];
 
-        const response = await axios.post('/ventes/invoice/savepdf', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
+        // 2. Envoyer en JSON (plus fiable)
+        const response = await axios.post('/ventes/invoice/savepdf', {
+            pdf_base64: pureBase64,
+            sale_reference: props.sale.sale_reference,
         });
 
-        const filePath = response.data.path; // chemin absolu renvoyé par le backend
+        if (!response.data.success) {
+            throw new Error(response.data.message || 'Erreur serveur');
+        }
 
-        // 3. Partager via le share sheet natif
+        const filePath = response.data.path;
+
+        // 3. Partager
         await Share.file(
             `Facture ${props.sale.sale_reference}`,
             'Voici votre facture.',
@@ -285,21 +289,16 @@ const generatePdf = async () => {
         );
 
     } catch (error) {
-        console.error(error); // même si tu ne le vois pas sur Jump
-
         let message = 'Erreur inconnue';
 
         if (error.response) {
-            // Erreur HTTP (502, 500, 422…)
             message = `Status: ${error.response.status}\n`;
             message += JSON.stringify(error.response.data, null, 2);
-        } else if (error.request) {
-            message = 'Pas de réponse du serveur';
         } else {
             message = error.message;
         }
 
-        alert(message); // ou Dialog.alert si tu as le plugin Dialog
+        alert(message);
     } finally {
         isGenerating.value = false;
     }
