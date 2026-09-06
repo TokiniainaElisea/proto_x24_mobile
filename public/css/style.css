@@ -8,13 +8,16 @@ body {
     transition: transform 0.2s ease-out;
 }
 
-body.keyboard-visible .bottom-nav {
-    transform: translateY(100%);
-    padding-bottom: 40vh;
+body.keyboard-visible {
+    padding-bottom: calc(40vh + env(safe-area-inset-bottom, 0px));
 }
 
-body .keyboard-viwible .modal{
-    padding-bottom: 40vh;
+body.keyboard-visible .bottom-nav {
+    transform: translateY(100%);
+}
+
+input, textarea {
+    scroll-margin-bottom: 100px; /* Force un recul lors du focus */
 }
 
 .modal{
