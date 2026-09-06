@@ -9,7 +9,7 @@ body {
 }
 
 body.keyboard-visible {
-    padding-bottom: calc(40vh + env(safe-area-inset-bottom, 0px));
+    padding-bottom: 500px !important;
 }
 
 body.keyboard-visible .bottom-nav {
