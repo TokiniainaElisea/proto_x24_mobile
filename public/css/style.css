@@ -9,15 +9,15 @@ body {
 }
 
 body.keyboard-visible {
-    padding-bottom: 500px !important;
+    padding-bottom: 40vh !important;
 }
 
 body.keyboard-visible .bottom-nav {
     transform: translateY(100%);
 }
 
-input, textarea {
-    scroll-margin-bottom: 100px; /* Force un recul lors du focus */
+.modal input, textarea {
+    scroll-margin-bottom: 300px;
 }
 
 .modal{

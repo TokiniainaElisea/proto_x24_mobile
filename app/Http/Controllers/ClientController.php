@@ -6,6 +6,7 @@ use App\Http\Requests\ClientRequest;
 use App\Http\Requests\ClientSearchRequest;
 use App\Models\Client;
 use App\Models\Numbering;
+use App\Models\Sales;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -63,5 +64,12 @@ class ClientController extends Controller
     public function delete(Client $client){
         $client->delete();
         return to_route('client')->with('success', 'Suppréssion effectuée');
+    }
+
+    //show client
+    public function show_client($id){
+        $client = Client::with('sales')->findOrFail($id);
+        $sales = Sales::with('client')->where('client_id', '=', $id)->paginate(10);
+        return view('clients.parts.client_card', ['client' => $client, 'sales' => $sales]);
     }
 }

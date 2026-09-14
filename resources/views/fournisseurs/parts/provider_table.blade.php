@@ -166,17 +166,14 @@
                                         {{-- ================================= --}}
 
                                         <td class="text-center">
+                                            <div class="d-flex justify-content-center gap-2">
 
-                                            <div class="btn-group provider-actions">
-
-                                                <button type="button" class="btn btn-warning btn-sm" title="Modifier"
-                                                    data-bs-target="{{ '#provider_' . $provider->id }}"
-                                                    data-bs-toggle="modal">
+                                                <a href="{{ route('edit_provider', $provider->id) }}"
+                                                    class="btn btn-warning btn-sm">
 
                                                     <i class="bi bi-pencil-square"></i>
 
-                                                </button>
-
+                                                </a>
 
                                                 <button type="button" class="btn btn-danger btn-sm" title="Supprimer"
                                                     data-bs-target="{{ '#delete_provider' . $provider->id }}"
@@ -185,23 +182,12 @@
                                                     <i class="bi bi-trash3-fill"></i>
 
                                                 </button>
+                                                <a href="{{ route('show_provider', $provider->id) }}"
+                                                    class="btn btn-sm btn-info">
+                                                    <i class="bi bi-eye"> </i>
+                                                </a>
 
                                             </div>
-
-
-                                            {{-- MODAL EDIT --}}
-
-                                            @include('fournisseurs.parts.edit', [
-                                                'provider' => $provider,
-                                            
-                                                'id' => $provider->id,
-                                            
-                                                'name_provider' => $provider->name_provider,
-                                            
-                                                'mail' => $provider->mail,
-                                            
-                                                'phone' => $provider->phone,
-                                            ])
 
 
                                             {{-- MODAL DELETE --}}

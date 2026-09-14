@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use App\Models\Product;
@@ -11,10 +10,16 @@ class Provider extends Model
     protected $fillable = [
         'name_provider',
         'mail',
-        'phone'
+        'phone',
+        'adress',
+        'town',
+        'pays',
+        'name_contact',
+        'note',
     ];
 
-    public function product(){
-        return $this->hasOne(Product::class);
+    public function product()
+    {
+        return $this->hasMany(Product::class);
     }
 }

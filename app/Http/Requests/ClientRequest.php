@@ -27,6 +27,7 @@ class ClientRequest extends FormRequest
             'phone' => ['nullable', 'numeric'],
             'adress' => ['nullable'],
             'town' => ['nullable'],
+            'client_type' => ['nullable']
         ];
     }
 }

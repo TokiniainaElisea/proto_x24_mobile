@@ -29,7 +29,7 @@ class ProductController extends Controller
         return view('products.products', [
             'categories'    => Category::all(),
             'name_category' => $name_category,
-            'products'      => $query->paginate(10),
+            'products'      => $query->paginate(5),
         ]);
     }
 

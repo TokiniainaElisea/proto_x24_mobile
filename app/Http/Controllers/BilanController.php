@@ -69,7 +69,7 @@ class BilanController extends Controller
 
             }
 
-            // On peut ignorer les catégories sans vente
+            // On peut ignorer les catégories sans vente, ou ce que vous voulez 
             if ($quantity > 0) {
                 $labels[] = $category->name_category;
                 $data[]   = $quantity;

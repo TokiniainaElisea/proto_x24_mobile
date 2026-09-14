@@ -94,14 +94,24 @@ Route::prefix('/provider')->controller(ProviderController::class)->group(functio
     //index
     Route::get('/', 'index')->name('provider');
 
+    //create new provider
+    Route::get('/new_privider_form', 'new_privider_form')->name('new_privider_form');
+
     //store new provider
     Route::post('/new', 'new')->name('new_provider');
+
+    //edit provider
+    Route::get('/edit/{id}', 'edit_provider')->name('edit_provider');
 
     //update provider
     Route::put('/update/{provider}', 'update')->name('update_provider');
 
     //destroy provider
     Route::delete('/delete/{provider}', 'delete')->name('delete_provider');
+
+    //show provider
+    Route::get('/show/{id}', 'show_provider')->name('show_provider');
+
 });
 
 //clients route
@@ -117,6 +127,9 @@ Route::prefix('/client')->controller(ClientController::class)->group(function(){
 
     //destroy client
     Route::delete('/delete/{client}', 'delete')->name('delete_client');
+
+    //show client
+    Route::get('/show_client/{id}', 'show_client')->name('show_client');
 });
 
 //bilan route

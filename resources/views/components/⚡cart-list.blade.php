@@ -26,6 +26,9 @@ new class extends Component {
     //remise
     public $discount = 0;
 
+    //error stock
+    public $error_stock = null;
+
     #[Computed]
     public function isValidOrder()
     {
@@ -145,7 +148,8 @@ new class extends Component {
                 $totalStock = $mouvements->sum('in_stock');
 
                 if ($totalStock < $quantityToRemove) {
-                    throw new \Exception('Stock insuffisant pour le produit : ' . $value['name_product']);
+                    $error_stock = 'Stock insuffisant pour le produit : ' . $value['name_product'];
+                    break;
                 }
 
                 /*
@@ -470,6 +474,14 @@ new class extends Component {
 
                     </small>
 
+                </div>
+            @endif
+
+            @if ($error_stock)
+                <div class="text-end mt-2">
+                    <small class="text-muted text-danger">
+                        {{ $error_stock }}
+                </small>
                 </div>
             @endif
 

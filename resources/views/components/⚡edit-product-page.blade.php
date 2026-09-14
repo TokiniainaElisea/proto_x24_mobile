@@ -190,7 +190,7 @@ new class extends Component
 
     /**
      * Supprime l'ancienne image.
-     * Accepte soit une URL complète (/_assets/storage/...), soit un chemin relatif.
+     * Accepte soit une URL complète (/_assets/storage/...), soit un chemin relatif. Je note pour ne pas oublier 
      */
     protected function deleteOldImage(?string $storedPath): void
     {
@@ -228,11 +228,8 @@ new class extends Component
         }
     }
 
-    /**
+    /*
      * Convertit une URL stockée en BDD en chemin relatif du disque.
-     * Ex: /_assets/storage/uploads/product/x.jpg → uploads/product/x.jpg
-     *     /storage/uploads/product/x.jpg         → uploads/product/x.jpg
-     *     uploads/product/x.jpg                  → uploads/product/x.jpg
      */
     protected function toRelativeStoragePath(string $storedPath): string
     {

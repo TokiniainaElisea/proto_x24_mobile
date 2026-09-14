@@ -22,7 +22,7 @@
                 <a href="{{ route('downloadInvoice', $sale) }}" class="btn text-info"> <i class="bi bi-download"></i> Facture </a>
             </div>
 
-            <a href="{{ route('ventes') }}" class="btn btn-outline-warning mb-2">
+            <a href="{{ url()->previous() }}" class="btn btn-outline-warning mb-2">
                 <i class="bi bi-arrow-left"></i>
                 Retour
             </a>

@@ -40,9 +40,7 @@ new class extends Component {
 
                         <div class="row align-items-center g-3">
 
-                            {{-- ================================================= --}}
-                            {{-- INFORMATIONS PRODUIT                              --}}
-                            {{-- ================================================= --}}
+                            {{-- INFORMATIONS PRODUIT --}}
 
                             <div class="col-12 col-md-9">
 
@@ -120,9 +118,7 @@ new class extends Component {
                             </div>
 
 
-                            {{-- ================================================= --}}
-                            {{-- ACTION                                             --}}
-                            {{-- ================================================= --}}
+                            {{-- ACTION --}}
 
                             <div class="col-12 col-md-3">
 

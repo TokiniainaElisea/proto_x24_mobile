@@ -2,7 +2,7 @@
 $id;
 @endphp
 
-<div class="modal fade shadow-lg" tabindex="-1" aria-hidden="true" id="{{$id}}">
+<div class="modal fade shadow-lg keyboard-visible" tabindex="-1" aria-hidden="true" id="{{$id}}">
 
 <div class="modal-dialog modal-dialog-scrollable">
 
@@ -78,6 +78,13 @@ $id;
 
                     </select>
 
+                </div>
+                <div class="mb-3">
+                    <label for="type" class="form-label fw-semibold"> Type </label>
+                    <select name="client_type" class="form-select"> 
+                        <option value="Particulier"> Particulier </option>
+                        <option value="Société"> Société </option>
+                    </select>
                 </div>
 
                 <div class="row">

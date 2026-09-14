@@ -1,144 +1,356 @@
-@php
-    $provider;
-    $id;
-    $name_provider;
-    $mail;
-    $phone;
-@endphp
+@extends('layout')
 
-<div class="modal fade"
-     id="{{'provider_'.$id}}"
-     aria-hidden="true"
-     tabindex="-1">
+@section('content')
+    <div class="container p-2">
 
-    <div class="modal-dialog modal-dialog-scrollable">
+        {{-- En-tête --}}
+        <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <div class="modal-content border-0 shadow">
+            <div class="d-flex align-items-center">
 
-            {{-- Header --}}
-            <div class="modal-header bg-dark text-white">
+                <div class="bg-warning bg-opacity-10 rounded-3
+                        d-flex align-items-center justify-content-center me-3"
+                    style="width: 50px; height: 50px;">
 
-                <h5 class="modal-title fw-bold">
+                    <i class="bi bi-pencil-square text-warning fs-3"></i>
 
-                    <i class="bi bi-pencil-square me-2"></i>
-                    Modifier le fournisseur
+                </div>
 
-                </h5>
+                <div>
 
-                <button
-                    type="button"
-                    class="btn-close btn-close-white"
-                    data-bs-dismiss="modal"
-                    aria-label="Fermer">
-                </button>
+                    <h2 class="fw-bold mb-0">
+                        Modifier le fournisseur
+                    </h2>
+
+                </div>
 
             </div>
 
-            {{-- Body --}}
-            <div class="modal-body p-4">
+            <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
 
-                <form action="{{route('update_provider',$provider)}}"
-                      method="post">
+                <i class="bi bi-arrow-left me-1"></i>
+            </a>
 
-                    @csrf
-                    @method('put')
+        </div>
 
-                    {{-- Nom --}}
-                    <div class="mb-3">
 
-                        <label for="name_provider_{{$id}}"
-                               class="form-label fw-semibold">
+        <form action="{{ route('update_provider', $provider) }}" method="POST">
 
-                            <i class="bi bi-building me-1 text-primary"></i>
-                            Nom du fournisseur
+            @csrf
+            @method('PUT')
 
-                        </label>
+            <div class="row g-4">
 
-                        <input
-                            type="text"
-                            name="name_provider"
-                            id="name_provider_{{$id}}"
-                            class="form-control"
-                            value="{{$name_provider}}"
-                            placeholder="Nom du fournisseur"
-                            required>
+
+                {{-- ============================= --}}
+                {{-- INFORMATIONS DU FOURNISSEUR --}}
+                {{-- ============================= --}}
+
+                <div class="col-lg-8">
+
+                    <div class="card border-0 shadow-sm">
+
+                        <div class="card-header bg-dark text-white">
+
+                            <h5 class="mb-0">
+
+                                <i class="bi bi-building-fill me-2"></i>
+                                Informations du fournisseur
+
+                            </h5>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="row g-3">
+
+                                {{-- Nom --}}
+                                <div class="col-12">
+
+                                    <label for="name_provider" class="form-label fw-semibold">
+
+                                        <i class="bi bi-shop me-1 text-primary"></i>
+                                        Nom du fournisseur
+                                        <span class="text-danger">*</span>
+
+                                    </label>
+
+                                    <input type="text" id="name_provider" name="name_provider"
+                                        class="form-control @error('name_provider') is-invalid @enderror"
+                                        value="{{ old('name_provider', $provider->name_provider) }}" required>
+
+                                    @error('name_provider')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+
+                                </div>
+
+
+                                {{-- Email --}}
+                                <div class="col-md-6">
+
+                                    <label for="mail" class="form-label fw-semibold">
+
+                                        <i class="bi bi-envelope-fill me-1 text-primary"></i>
+                                        Adresse e-mail
+
+                                    </label>
+
+                                    <input type="email" id="mail" name="mail"
+                                        class="form-control @error('mail') is-invalid @enderror"
+                                        value="{{ old('mail', $provider->mail) }}" placeholder="contact@entreprise.com">
+
+                                    @error('mail')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+
+                                </div>
+
+
+                                {{-- Téléphone --}}
+                                <div class="col-md-6">
+
+                                    <label for="phone" class="form-label fw-semibold">
+
+                                        <i class="bi bi-telephone-fill me-1 text-success"></i>
+                                        Téléphone
+
+                                    </label>
+
+                                    <input type="text" id="phone" name="phone"
+                                        class="form-control @error('phone') is-invalid @enderror"
+                                        value="{{ old('phone', $provider->phone) }}" placeholder="Ex : 034 00 000 00">
+
+                                    @error('phone')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+
+                                </div>
+
+
+                                {{-- Adresse --}}
+                                <div class="col-12">
+
+                                    <label for="adress" class="form-label fw-semibold">
+
+                                        <i class="bi bi-geo-alt-fill me-1 text-danger"></i>
+                                        Adresse
+
+                                    </label>
+
+                                    <input type="text" id="adress" name="adress"
+                                        class="form-control @error('adress') is-invalid @enderror"
+                                        value="{{ old('adress', $provider->adress) }}" placeholder="Adresse du fournisseur">
+
+                                    @error('adress')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+
+                                </div>
+
+
+                                {{-- Ville --}}
+                                <div class="col-md-6">
+
+                                    <label for="town" class="form-label fw-semibold">
+
+                                        <i class="bi bi-geo-fill me-1 text-info"></i>
+                                        Ville
+
+                                    </label>
+
+                                    <input type="text" id="town" name="town"
+                                        class="form-control @error('town') is-invalid @enderror"
+                                        value="{{ old('town', $provider->town) }}" placeholder="Ex : Antananarivo">
+
+                                    @error('town')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+
+                                </div>
+
+
+                                {{-- Pays --}}
+                                <div class="col-md-6">
+
+                                    <label for="pays" class="form-label fw-semibold">
+
+                                        <i class="bi bi-globe2 me-1 text-success"></i>
+                                        Pays
+
+                                    </label>
+
+                                    <input type="text" id="pays" name="pays"
+                                        class="form-control @error('pays') is-invalid @enderror"
+                                        value="{{ old('pays', $provider->pays) }}" placeholder="Ex : Madagascar">
+
+                                    @error('pays')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+
+                                </div>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
-                    {{-- Email --}}
-                    <div class="mb-3">
+                </div>
 
-                        <label for="mail_{{$id}}"
-                               class="form-label fw-semibold">
 
-                            <i class="bi bi-envelope me-1 text-primary"></i>
-                            Adresse e-mail
+                {{-- ============================= --}}
+                {{-- CONTACT --}}
+                {{-- ============================= --}}
 
-                        </label>
+                <div class="col-lg-4">
 
-                        <input
-                            type="email"
-                            name="mail"
-                            id="mail_{{$id}}"
-                            class="form-control"
-                            value="{{$mail}}"
-                            placeholder="Adresse e-mail"
-                            required>
+                    <div class="card border-0 shadow-sm h-100">
+
+                        <div class="card-header bg-dark text-white">
+
+                            <h5 class="mb-0">
+
+                                <i class="bi bi-person-lines-fill me-2"></i>
+                                Contact
+
+                            </h5>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <label for="name_contact" class="form-label fw-semibold">
+
+                                <i class="bi bi-person-fill me-1 text-primary"></i>
+                                Personne à contacter
+
+                            </label>
+
+                            <input type="text" id="name_contact" name="name_contact"
+                                class="form-control @error('name_contact') is-invalid @enderror"
+                                value="{{ old('name_contact', $provider->name_contact) }}" placeholder="Nom du contact">
+
+                            @error('name_contact')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+
+                            <div class="alert alert-light border mt-4 mb-0">
+
+                                <div class="d-flex">
+
+                                    <i class="bi bi-info-circle-fill text-primary me-2"></i>
+
+                                    <small class="text-muted">
+
+                                        Vous pouvez indiquer ici le nom du commercial,
+                                        responsable ou interlocuteur habituel.
+
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
-                    {{-- Téléphone --}}
-                    <div class="mb-4">
+                </div>
 
-                        <label for="phone_{{$id}}"
-                               class="form-label fw-semibold">
 
-                            <i class="bi bi-telephone me-1 text-success"></i>
-                            Téléphone
+                {{-- ============================= --}}
+                {{-- NOTES --}}
+                {{-- ============================= --}}
 
-                        </label>
+                <div class="col-12">
 
-                        <input
-                            type="tel"
-                            name="phone"
-                            id="phone_{{$id}}"
-                            class="form-control"
-                            value="{{$phone}}"
-                            placeholder="Numéro de téléphone"
-                            required>
+                    <div class="card border-0 shadow-sm">
+
+                        <div class="card-header bg-dark text-white">
+
+                            <h5 class="mb-0">
+
+                                <i class="bi bi-sticky-fill me-2"></i>
+                                Notes
+
+                            </h5>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <label for="note" class="form-label fw-semibold">
+
+                                <i class="bi bi-pencil-square me-1 text-warning"></i>
+                                Informations complémentaires
+
+                            </label>
+
+                            <textarea id="note" name="note" rows="4" class="form-control @error('note') is-invalid @enderror"
+                                placeholder="Ajoutez une remarque concernant ce fournisseur...">{{ old('note', $provider->note) }}</textarea>
+
+                            @error('note')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                        </div>
 
                     </div>
 
-                    {{-- Actions --}}
-                    <div class="d-flex justify-content-end gap-2">
+                </div>
 
-                        <button
-                            type="button"
-                            class="btn btn-outline-secondary"
-                            data-bs-dismiss="modal">
 
-                            <i class="bi bi-x-circle me-1"></i>
+                {{-- ============================= --}}
+                {{-- ACTIONS --}}
+                {{-- ============================= --}}
+
+                <div class="col-12">
+
+                    <div class="d-flex justify-content-end gap-2 mb-4">
+
+                        <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
+
+                            <i class="bi bi-x-lg me-1"></i>
                             Annuler
 
-                        </button>
+                        </a>
 
-                        <button
-                            type="submit"
-                            class="btn btn-warning">
+                        <button type="submit" class="btn btn-success px-4">
 
-                            <i class="bi bi-check-circle-fill me-1"></i>
+                            <i class="bi bi-check-lg me-1"></i>
                             Enregistrer
 
                         </button>
 
                     </div>
 
-                </form>
+                </div>
 
             </div>
 
-        </div>
+        </form>
 
     </div>
-
-</div>
+@endsection

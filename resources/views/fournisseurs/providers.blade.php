@@ -26,14 +26,13 @@
 
             </div>
 
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#new_provider">
+            <a href="{{ route('new_privider_form') }}" class="btn btn-success">
 
                 <i class="bi bi-plus-circle-fill me-1"></i>
-
-            </button>
+            </a>
 
         </div>
+        @include('fournisseurs.parts.filter_provider')
         @include('fournisseurs.parts.provider_table')
-        @include('fournisseurs.parts.new_provider', ['id' => 'new_provider'])
     </div>
 @endsection

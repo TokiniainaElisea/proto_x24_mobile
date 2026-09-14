@@ -1,157 +1,390 @@
-<div class="modal fade"
-     id="{{ $id }}"
-     tabindex="-1"
-     aria-labelledby="{{ $id }}Label"
-     aria-hidden="true">
+@extends('layout')
 
-    <div class="modal-dialog">
+@section('content')
+    <div class="container p-2">
 
-        <div class="modal-content border-0 shadow">
+    {{-- En-tête --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-            {{-- Header --}}
-            <div class="modal-header bg-dark text-white">
+        <div class="d-flex align-items-center">
 
-                <h5 class="modal-title fw-bold" id="{{ $id }}Label">
+            <div class=" bg-opacity-10 rounded-3
+                        d-flex align-items-center justify-content-center me-3"
+                style="width: 50px; height: 50px;">
 
-                    <i class="bi bi-truck me-2"></i>
-                    Ajouter un fournisseur
-
-                </h5>
-
-                <button
-                    type="button"
-                    class="btn-close btn-close-white"
-                    data-bs-dismiss="modal"
-                    aria-label="Fermer">
-                </button>
+                <i class="bi bi-truck text-primary fs-3"></i>
 
             </div>
 
-            {{-- Body --}}
-            <div class="modal-body p-4">
+            <div>
 
-                <form action="{{ route('new_provider') }}"
-                      method="POST">
-
-                    @csrf
-
-                    {{-- Nom --}}
-                    <div class="mb-3">
-
-                        <label for="name_provider" class="form-label fw-semibold">
-
-                            <i class="bi bi-building me-1 text-primary"></i>
-                            Nom du fournisseur
-
-                        </label>
-
-                        <input
-                            type="text"
-                            name="name_provider"
-                            id="name_provider"
-                            class="form-control @error('name_provider') is-invalid @enderror"
-                            placeholder="Ex : ABC Distribution"
-                            value="{{ old('name_provider') }}"
-                            required>
-
-                        @error('name_provider')
-
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-
-                        @enderror
-
-                    </div>
-
-                    {{-- Email --}}
-                    <div class="mb-3">
-
-                        <label for="mail" class="form-label fw-semibold">
-
-                            <i class="bi bi-envelope me-1 text-primary"></i>
-                            Adresse e-mail
-
-                        </label>
-
-                        <input
-                            type="email"
-                            name="mail"
-                            id="mail"
-                            class="form-control @error('mail') is-invalid @enderror"
-                            placeholder="Ex : contact@fournisseur.com"
-                            value="{{ old('mail') }}"
-                            required>
-
-                        @error('mail')
-
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-
-                        @enderror
-
-                    </div>
-
-                    {{-- Téléphone --}}
-                    <div class="mb-4">
-
-                        <label for="phone" class="form-label fw-semibold">
-
-                            <i class="bi bi-telephone me-1 text-success"></i>
-                            Téléphone
-
-                        </label>
-
-                        <input
-                            type="tel"
-                            name="phone"
-                            id="phone"
-                            class="form-control @error('phone') is-invalid @enderror"
-                            placeholder="Ex : 341234567"
-                            value="{{ old('phone') }}"
-                            required>
-
-                        @error('phone')
-
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-
-                        @enderror
-
-                    </div>
-
-                    {{-- Actions --}}
-                    <div class="d-flex justify-content-end gap-2">
-
-                        <button
-                            type="button"
-                            class="btn btn-outline-secondary"
-                            data-bs-dismiss="modal">
-
-                            <i class="bi bi-x-circle me-1"></i>
-                            Annuler
-
-                        </button>
-
-                        <button
-                            type="submit"
-                            class="btn btn-success">
-
-                            <i class="bi bi-plus-circle-fill me-1"></i>
-                            Ajouter
-
-                        </button>
-
-                    </div>
-
-                </form>
+                <h2 class="fw-bold mb-0">
+                    Nouveau fournisseur
+                </h2>
 
             </div>
 
         </div>
 
+        <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+        </a>
+
     </div>
 
+
+    <form action="{{ route('new_provider') }}" method="POST">
+
+        @csrf
+
+        <div class="row g-4">
+
+
+            {{-- INFORMATIONS DU FOURNISSEUR --}}
+
+            <div class="col-lg-8">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-header bg-dark text-white">
+
+                        <h5 class="mb-0">
+
+                            <i class="bi bi-building-fill me-2"></i>
+                            Informations du fournisseur
+
+                        </h5>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="row g-3">
+
+                            {{-- Nom --}}
+                            <div class="col-12">
+
+                                <label for="name_provider" class="form-label fw-semibold">
+
+                                    <i class="bi bi-shop me-1 text-primary"></i>
+                                    Nom du fournisseur
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="name_provider"
+                                    name="name_provider"
+                                    class="form-control @error('name_provider') is-invalid @enderror"
+                                    value="{{ old('name_provider') }}"
+                                    placeholder="Ex : ABC Distribution"
+                                    required
+                                >
+
+                                @error('name_provider')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Email --}}
+                            <div class="col-md-6">
+
+                                <label for="mail" class="form-label fw-semibold">
+
+                                    <i class="bi bi-envelope-fill me-1 text-primary"></i>
+                                    Adresse e-mail
+
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="mail"
+                                    name="mail"
+                                    class="form-control @error('mail') is-invalid @enderror"
+                                    value="{{ old('mail') }}"
+                                    placeholder="contact@entreprise.com"
+                                >
+
+                                @error('mail')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Téléphone --}}
+                            <div class="col-md-6">
+
+                                <label for="phone" class="form-label fw-semibold">
+
+                                    <i class="bi bi-telephone-fill me-1 text-success"></i>
+                                    Téléphone
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="phone"
+                                    name="phone"
+                                    class="form-control @error('phone') is-invalid @enderror"
+                                    value="{{ old('phone') }}"
+                                    placeholder="Ex : 034 00 000 00"
+                                >
+
+                                @error('phone')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Adresse --}}
+                            <div class="col-12">
+
+                                <label for="adress" class="form-label fw-semibold">
+
+                                    <i class="bi bi-geo-alt-fill me-1 text-danger"></i>
+                                    Adresse / Lot
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="adress"
+                                    name="adress"
+                                    class="form-control @error('adress') is-invalid @enderror"
+                                    value="{{ old('adress') }}"
+                                    placeholder="Adresse du fournisseur"
+                                >
+
+                                @error('adress')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Ville --}}
+                            <div class="col-md-6">
+
+                                <label for="town" class="form-label fw-semibold">
+
+                                    <i class="bi bi-geo-fill me-1 text-info"></i>
+                                    Ville
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="town"
+                                    name="town"
+                                    class="form-control @error('town') is-invalid @enderror"
+                                    value="{{ old('town') }}"
+                                    placeholder="Ex : Antananarivo"
+                                >
+
+                                @error('town')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                            </div>
+
+
+                            {{-- Pays --}}
+                            <div class="col-md-6">
+
+                                <label for="pays" class="form-label fw-semibold">
+
+                                    <i class="bi bi-globe2 me-1 text-success"></i>
+                                    Pays
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="pays"
+                                    name="pays"
+                                    class="form-control @error('pays') is-invalid @enderror"
+                                    value="{{ old('pays') }}"
+                                    placeholder="Ex : Madagascar"
+                                >
+
+                                @error('pays')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {{-- CONTACT --}}
+
+            <div class="col-lg-4">
+
+                <div class="card border-0 shadow-sm h-100">
+
+                    <div class="card-header bg-dark text-white">
+
+                        <h5 class="mb-0">
+
+                            <i class="bi bi-person-lines-fill me-2"></i>
+                            Contact
+
+                        </h5>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <label for="name_contact" class="form-label fw-semibold">
+
+                            <i class="bi bi-person-fill me-1 text-primary"></i>
+                            Personne à contacter
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name_contact"
+                            name="name_contact"
+                            class="form-control @error('name_contact') is-invalid @enderror"
+                            value="{{ old('name_contact') }}"
+                            placeholder="Nom du contact"
+                        >
+
+                        @error('name_contact')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+
+                        <div class="alert alert-light border mt-4 mb-0">
+
+                            <div class="d-flex">
+
+                                <i class="bi bi-info-circle-fill text-primary me-2"></i>
+
+                                <small class="text-muted">
+
+                                    Vous pouvez indiquer ici le nom du commercial,
+                                    responsable ou interlocuteur habituel.
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {{-- NOTES --}}
+
+            <div class="col-12">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-header bg-dark text-white">
+
+                        <h5 class="mb-0">
+
+                            <i class="bi bi-sticky-fill me-2"></i>
+                            Notes
+
+                        </h5>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <label for="note" class="form-label fw-semibold">
+
+                            <i class="bi bi-pencil-square me-1 text-warning"></i>
+                            Informations complémentaires
+
+                        </label>
+
+                        <textarea
+                            id="note"
+                            name="note"
+                            rows="4"
+                            class="form-control @error('note') is-invalid @enderror"
+                            placeholder="Ajoutez une remarque concernant ce fournisseur..."
+                        >{{ old('note') }}</textarea>
+
+                        @error('note')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {{-- ACTIONS --}}
+
+            <div class="col-12">
+
+                <div class="d-flex justify-content-end gap-2 mb-4">
+
+                    <a href="{{ url()->previous() }}"
+                       class="btn btn-outline-secondary">
+
+                        <i class="bi bi-x-lg me-1"></i>
+                        Annuler
+
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-primary px-4">
+
+                        <i class="bi bi-person-plus-fill me-1"></i>
+                        Enregistrer
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
 </div>
+@endsection

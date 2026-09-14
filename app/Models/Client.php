@@ -17,10 +17,11 @@ class Client extends Model
         'phone',
         'adress',
         'town',
-        'client_number'
+        'client_number',
+        'client_type'
     ];
 
     public function sales(){
-        return $this->hasOne(Sales::class);
+        return $this->hasMany(Sales::class);
     }
 }

@@ -4,8 +4,7 @@
     <div class="container-fluid">
 
         {{-- Logo / Nom --}}
-        <a href="{{ route('dashboard') }}"
-           class="navbar-brand d-flex align-items-center text-decoration-none">
+        <a href="{{ route('dashboard') }}" class="navbar-brand d-flex align-items-center text-decoration-none">
 
             <div class="lh-1">
 
@@ -19,13 +18,8 @@
 
 
         {{-- Bouton menu mobile --}}
-        <button
-            class="btn btn-outline-light d-lg-none border-0"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#mobileSidebar"
-            aria-controls="mobileSidebar"
-            aria-label="Ouvrir le menu">
+        <button class="btn btn-outline-light d-lg-none border-0" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#mobileSidebar" aria-controls="mobileSidebar" aria-label="Ouvrir le menu">
 
             <i class="bi bi-list fs-3"></i>
 
@@ -37,10 +31,7 @@
 
 
 {{-- ================= SIDEBAR / OFFCANVAS ================= --}}
-<div
-    class="offcanvas-lg offcanvas-start bg-dark text-white sidebar"
-    tabindex="-1"
-    id="mobileSidebar"
+<div class="offcanvas-lg offcanvas-start bg-dark text-white sidebar" tabindex="-1" id="mobileSidebar"
     aria-labelledby="mobileSidebarLabel">
 
 
@@ -60,11 +51,7 @@
         </div>
 
 
-        <button
-            type="button"
-            class="btn-close btn-close-white"
-            data-bs-dismiss="offcanvas"
-            aria-label="Fermer">
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Fermer">
         </button>
 
     </div>
@@ -88,8 +75,7 @@
 
             <li class="nav-item">
 
-                <a
-                    href="{{ route('dashboard') }}"
+                <a href="{{ route('dashboard') }}"
                     class="nav-link text-white rounded-3
                     {{ request()->routeIs('dashboard') ? 'active bg-primary' : '' }}">
 
@@ -113,8 +99,7 @@
 
             <li class="nav-item">
 
-                <a
-                    href="{{ route('ventes') }}"
+                <a href="{{ route('ventes') }}"
                     class="nav-link text-white rounded-3
                     {{ request()->routeIs('ventes*') ? 'active bg-primary' : '' }}">
 
@@ -128,28 +113,12 @@
 
             <li class="nav-item">
 
-                <a
-                    href="{{ route('produits') }}"
+                <a href="{{ route('produits') }}"
                     class="nav-link text-white rounded-3
                     {{ request()->routeIs('produits*') ? 'active bg-primary' : '' }}">
 
                     <i class="bi bi-box-seam me-2"></i>
                     Produits
-
-                </a>
-
-            </li>
-
-
-            <li class="nav-item">
-
-                <a
-                    href="{{ route('provider') }}"
-                    class="nav-link text-white rounded-3
-                    {{ request()->routeIs('provider*') ? 'active bg-primary' : '' }}">
-
-                    <i class="bi bi-truck me-2"></i>
-                    Fournisseurs
 
                 </a>
 
@@ -168,8 +137,7 @@
 
             <li class="nav-item">
 
-                <a
-                    href="{{ route('bilan') }}"
+                <a href="{{ route('bilan') }}"
                     class="nav-link text-white rounded-3
                     {{ request()->routeIs('bilan') ? 'active bg-primary' : '' }}">
 
@@ -193,8 +161,7 @@
 
             <li class="nav-item">
 
-                <a
-                    href="{{ route('client') }}"
+                <a href="{{ route('client') }}"
                     class="nav-link text-white rounded-3
                     {{ request()->routeIs('client*') ? 'active bg-primary' : '' }}">
 
@@ -205,17 +172,32 @@
 
             </li>
 
+            <li class="nav-item">
+
+                <a href="{{ route('provider') }}"
+                    class="nav-link text-white rounded-3
+                    {{ request()->routeIs('provider*') ? 'active bg-primary' : '' }}">
+
+                    <i class="bi bi-truck me-2"></i>
+                    Fournisseurs
+
+                </a>
+
+            </li>
+
 
             {{-- ================= PARAMÈTRES ================= --}}
+            <li class="nav-item mt-3">
+
+                <small class="text-uppercase text-secondary fw-bold px-3">
+                    Autre
+                </small>
+
+            </li>
             <li class="nav-item mt-1">
 
-                <a
-                    class="nav-link text-white rounded-3"
-                    data-bs-toggle="collapse"
-                    href="#settingsMenu"
-                    role="button"
-                    aria-expanded="false"
-                    aria-controls="settingsMenu">
+                <a class="nav-link text-white rounded-3" data-bs-toggle="collapse" href="#settingsMenu" role="button"
+                    aria-expanded="false" aria-controls="settingsMenu">
 
                     <i class="bi bi-gear me-2"></i>
                     Paramètres
@@ -231,9 +213,7 @@
 
                         <li class="nav-item">
 
-                            <a
-                                href="{{ route('company') }}"
-                                class="nav-link text-white">
+                            <a href="{{ route('company') }}" class="nav-link text-white">
 
                                 <i class="bi bi-building me-2"></i>
                                 Société
@@ -245,9 +225,7 @@
 
                         <li class="nav-item">
 
-                            <a
-                                href="{{ route('numbering') }}"
-                                class="nav-link text-white">
+                            <a href="{{ route('numbering') }}" class="nav-link text-white">
 
                                 <i class="bi bi-hash me-2"></i>
                                 Préfixes
@@ -259,9 +237,7 @@
 
                         <li class="nav-item">
 
-                            <a
-                                href="{{ route('about') }}"
-                                class="nav-link text-white">
+                            <a href="{{ route('about') }}" class="nav-link text-white">
 
                                 <i class="bi bi-info-circle me-2"></i>
                                 À propos
@@ -281,5 +257,3 @@
     </div>
 
 </div>
-
-

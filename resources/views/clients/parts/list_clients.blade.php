@@ -206,9 +206,9 @@
                                         {{-- ACTIONS                           --}}
                                         {{-- ================================= --}}
 
-                                        <td class="text-center">
+                                        <td class="">
 
-                                            <div class="d-flex justify-content-center gap-2 client-actions">
+                                            <div class="d-flex gap-2 client-actions">
 
                                                 {{-- Modifier --}}
 
@@ -230,6 +230,12 @@
                                                     <i class="bi bi-trash3-fill"></i>
 
                                                 </button>
+
+                                                {{-- La fiche --}}
+                                                <a href="{{ route('show_client', $client->id) }}"
+                                                    class="btn btn-sm btn-outline-info">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
 
 
                                                 {{-- Modals --}}

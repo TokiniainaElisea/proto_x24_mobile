@@ -57,14 +57,6 @@ new class extends Component {
                 'stat' => $this->stat,
                 'rcs' => $this->rcs,
             ]);
-
-            $this->name = '';
-            $this->legal_name = '';
-            $this->address = '';
-            $this->phone = '';
-            $this->nif = '';
-            $this->stat = '';
-            $this->rcs = '';
         } else {
             //ce truc ne va servir qu'une fois quoi 
             Company::create([
