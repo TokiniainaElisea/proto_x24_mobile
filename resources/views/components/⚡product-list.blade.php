@@ -7,10 +7,11 @@ new class extends Component {
     public string $search = '';
 
     //ajout d'un produit au panier
-    public function addProduct($product)
+    public function addProduct($product, $in_stock)
     {
-        $product['quantity'] = 1;
-        $this->dispatch('product-selected', product: $product);
+        //$product['quantity'] = 1;
+        //$product['in_stock'] = $in_stock;
+        $this->dispatch('product-selected', product: $product, stock: $in_stock);
     }
 
     public function render()
@@ -124,7 +125,7 @@ new class extends Component {
 
                                 @if ($product->mouvement && $product->mouvement->sum('in_stock') > 0)
                                     <button type="button" class="btn btn-outline-primary w-100"
-                                        wire:click="addProduct({{ $product }})">
+                                        wire:click="addProduct({{ $product }}, {{ $product->mouvement->sum('in_stock') }})">
 
                                         <i class="bi bi-cart-plus-fill me-1"></i>
 

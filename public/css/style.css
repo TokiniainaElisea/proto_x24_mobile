@@ -13,16 +13,17 @@ body.keyboard-visible {
 }
 
 body.keyboard-visible .bottom-nav {
-    transform: translateY(100%);
+    transform: translateY(100%);    
 }
 
-.modal input, textarea {
-    scroll-margin-bottom: 300px;
+.keyboard-zone{
+    height: 40vh;
 }
 
 .modal{
     padding-top : env(safe-area-inset-top, 20px);
 }
+
 .navbar {
     padding-top : env(safe-area-inset-top, 20px);
 }

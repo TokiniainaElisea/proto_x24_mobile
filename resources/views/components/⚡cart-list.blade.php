@@ -29,6 +29,7 @@ new class extends Component {
     //error stock
     public $error_stock = null;
 
+
     #[Computed]
     public function isValidOrder()
     {
@@ -50,6 +51,10 @@ new class extends Component {
         // Toutes les quantités doivent être valides
         foreach ($this->selectedProducts as $product) {
             if (!isset($product['quantity']) || !is_numeric($product['quantity']) || (int) $product['quantity'] < 1) {
+                return false;
+            }
+
+             if($product['quantity'] > $product['in_stock']){
                 return false;
             }
         }
@@ -75,7 +80,7 @@ new class extends Component {
     public $note = '';
 
     #[On('product-selected')]
-    public function selectProducts($product)
+    public function selectProducts($product, $stock)
     {
         foreach ($this->selectedProducts as $key => $value) {
             if ($value['id'] == $product['id']) {
@@ -84,6 +89,7 @@ new class extends Component {
             }
         }
 
+        $product['in_stock'] = $stock;
         $product['quantity'] = 1;
         $this->selectedProducts[] = $product;
         //dd($this->selectedProducts);
@@ -230,13 +236,13 @@ new class extends Component {
                                     <i class="bi bi-boxes me-1"></i>
 
                                     En stock :
-                                    {{ $product['mouvement'][0]['in_stock'] }}
+                                    {{ $product['in_stock'] }}
 
                                 </small>
 
                                 <span class="text-success fw-semibold">
 
-                                    {{ number_format($product['price'] * $product['quantity'], 0, ',', ' ') }}
+                                    {{ number_format($product['price'] * (int)$product['quantity'], 0, ',', ' ') }}
                                     Ar
 
                                 </span>
@@ -259,7 +265,7 @@ new class extends Component {
 
                             <input type="number" min="1"
                                 class="form-control text-center @error('selectedProducts.' . $key . '.quantity') is-invalid @enderror"
-                                wire:model.live.blur="selectedProducts[{{ $key }}]['quantity']">
+                                wire:model.live.blur.number="selectedProducts[{{ $key }}]['quantity']">
 
                             <button type="button" class="btn btn-outline-danger"
                                 wire:click="deleteProduct({{ $product['id'] }})" title="Supprimer du panier">
@@ -270,11 +276,11 @@ new class extends Component {
 
                         </div>
 
-                        @error('selectedProducts.' . $key . '.quantity')
+                        @if($product['in_stock'] < $selectedProducts[$key]['quantity'])
                             <small class="text-danger">
-                                {{ $message }}
+                                Quantité invalide
                             </small>
-                        @enderror
+                        @endif
 
                     </div>
 

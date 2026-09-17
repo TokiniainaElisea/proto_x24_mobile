@@ -240,7 +240,7 @@ new class extends Component
                         </div>
 
                         <div class="fs-4 fw-bold text-primary">
-                            {{ $order_prefix ?: 'CMD' }}-0125
+                            {{ $order_prefix ?: 'CMD' }}0125
                         </div>
 
                     </div>
@@ -260,7 +260,7 @@ new class extends Component
                         </div>
 
                         <div class="fs-4 fw-bold text-success">
-                            {{ $client_prefix ?: 'CLI' }}-042
+                            {{ $client_prefix ?: 'CLI' }}042
                         </div>
 
                     </div>
@@ -280,7 +280,7 @@ new class extends Component
                         </div>
 
                         <div class="fs-4 fw-bold text-warning">
-                            {{ $product_prefix ?: 'PRD' }}-0318
+                            {{ $product_prefix ?: 'PRD' }}0318
                         </div>
 
                     </div>
