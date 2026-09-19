@@ -1,39 +1,34 @@
 @extends('layout')
 
 @section('content')
-<div class="container">
+    <div class="container">
 
-<div class="d-flex justify-content-between align-items-center mb-4 my-2">
+        @if (session('success'))
+            <div class="card-body bg-success text-light mb-2">
+                {{ session('success') }}
+            </div>
+        @endif
 
-    <div>
+        <div class="d-flex justify-content-between align-items-center mb-4 my-2">
 
-        <h2 class="fw-bold mb-1">
+            <div>
 
-            <i class="bi bi-cart-plus-fill text-success me-2"></i>
-            Nouvelle vente
+                <h2 class="fw-bold mb-1">
 
-        </h2>
-    </div>
+                    <i class="bi bi-cart-plus-fill text-success me-2"></i>
+                    Nouvelle vente
 
-    <a
-        href="{{ route('ventes') }}"
-        class="btn btn-outline-secondary">
+                </h2>
+            </div>
 
-        <i class="bi bi-arrow-left me-1"></i>
-    </a>
+            <a href="{{ route('ventes') }}" class="btn btn-outline-secondary">
 
-</div>
+                <i class="bi bi-arrow-left me-1"></i>
+            </a>
 
-<div class="card border-0 shadow-sm mb-4">
-
-    <div class="card-body p-0">
+        </div>
 
         <livewire:order-page />
 
     </div>
-
-</div>
-
-</div>
-
 @endsection

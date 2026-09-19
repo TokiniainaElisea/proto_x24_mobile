@@ -92,7 +92,7 @@ class DashboardController extends Controller
                 'salesData'      => $salesData,
                 'categoryLabels' => $categoryLabels ?? [],
                 'categoryData'   => $categoryData ?? [],
-                'sales'          => $sales->paginate(5),
+                'sales'          => $sales->paginate(10),
             ]);
     }
 }
